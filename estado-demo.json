@@ -1,0 +1,8 @@
+{
+	"_que_es_esto": "Simula lo que el PANEL DE ADIANTA escribe. En produccion este JSON no existe: es Postgres editado desde panel.adiantai.es, y la carta lo lee igual que app-carta/src/scripts/disponibilidad.ts parchea la disponibilidad en runtime. Cambia un precio aqui, recarga la carta, y veras exactamente lo que vera el dueno al tocar su panel.",
+	"actualizado": "2026-07-28",
+	"platos": {
+		"tartar": { "disponible": false, "nota": "agotado hoy" },
+		"entrecot": { "precio": "31 €" }
+	}
+}

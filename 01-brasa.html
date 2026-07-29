@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#120d07">
+<title>Casa Rebolo · Asador</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 01 — BRASA · arquetipo: asador, parrilla, casa de comidas
+	   Ley de composición: un plato héroe a sangre, el resto en lista de UNA columna.
+	   La rejilla de dos columnas está prohibida aquí: es lo que aplana la jerarquía.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): brasa: lento y pesado, como la pieza saliendo de la parrilla */
+		--rev-dur:900ms;
+		--rev-desp:18px;
+		--rev-escala:1.06;
+		--rev-escalon:90ms;
+		--rev-satura:.6;
+		--carbon: #120d07;
+		--carbon-alto: #1d160d;
+		--laton: #d9ab66;
+		--laton-hondo: #a87a35;
+		--tinta: rgba(255, 250, 242, 0.94);
+		--tinta-media: rgba(255, 250, 242, 0.6);
+		--tinta-baja: rgba(255, 250, 242, 0.38);
+		--filete: rgba(217, 171, 102, 0.22);
+
+		--display: 'Georgia', 'Times New Roman', serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--carbon);
+		color: var(--tinta);
+		font-family: var(--ui);
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta {
+		max-width: var(--ancho);
+		margin: 0 auto;
+		background: var(--carbon);
+		overflow-x: hidden;
+	}
+
+	/* ---------- portada: una sola cosa en pantalla ---------- */
+	.portada {
+		position: relative;
+		min-height: 92svh;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		padding: 0 var(--gutter) 40px;
+		isolation: isolate;
+	}
+	.portada img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: -2;
+	}
+	/* la brasa respira: el rescoldo sube desde abajo, no es un degradado plano */
+	.portada::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			radial-gradient(120% 60% at 50% 108%, rgba(168, 122, 53, 0.5), transparent 62%),
+			linear-gradient(to top, var(--carbon) 4%, rgba(18, 13, 7, 0.82) 34%, rgba(18, 13, 7, 0.16) 72%);
+		animation: rescoldo 7s ease-in-out infinite alternate;
+	}
+	@keyframes rescoldo {
+		from { opacity: 0.86; }
+		to { opacity: 1; }
+	}
+
+	.marca {
+		font-family: var(--display);
+		font-size: clamp(3rem, 2rem + 8vw, 4.6rem);
+		line-height: 0.92;
+		letter-spacing: -0.03em;
+		margin: 0 0 14px;
+		text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+	}
+	.bajada {
+		font-size: 0.8rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--laton);
+		margin: 0 0 26px;
+	}
+
+	/* ---------- prólogo (robado a Son Daven): texto solo, antes de la comida ---------- */
+	.prologo {
+		padding: 76px var(--gutter) 68px;
+		text-align: center;
+		border-bottom: 1px solid var(--filete);
+	}
+	.prologo .eyebrow {
+		font-size: 0.68rem;
+		letter-spacing: 0.34em;
+		text-transform: uppercase;
+		color: var(--laton-hondo);
+		margin: 0 0 26px;
+	}
+	.prologo p {
+		font-family: var(--display);
+		font-size: clamp(1.35rem, 1.1rem + 1.6vw, 1.75rem);
+		line-height: 1.35;
+		letter-spacing: -0.015em;
+		margin: 0;
+		text-wrap: balance;
+	}
+	.prologo .firma {
+		font-family: var(--ui);
+		font-size: 0.76rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--tinta-baja);
+		margin: 26px 0 0;
+	}
+
+	/* ---------- la pieza del día: el héroe, a sangre, ANTES de la lista ---------- */
+	.pieza {
+		position: relative;
+		margin: 0;
+		border-bottom: 1px solid var(--filete);
+	}
+	.pieza .foto {
+		position: relative;
+		aspect-ratio: 4 / 5;
+	}
+	.pieza .foto img,
+	.pieza .foto video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.pieza .foto::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, var(--carbon) 2%, rgba(18, 13, 7, 0.55) 38%, transparent 70%);
+	}
+	.pieza .sello {
+		position: absolute;
+		top: 18px;
+		left: 18px;
+		z-index: 2;
+		padding: 7px 13px;
+		background: var(--laton);
+		color: #140f08;
+		font-size: 0.66rem;
+		font-weight: 700;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+	.pieza .texto {
+		position: relative;
+		margin-top: -84px;
+		padding: 0 var(--gutter) 34px;
+		z-index: 2;
+	}
+	.pieza h2 {
+		font-family: var(--display);
+		font-size: clamp(2rem, 1.5rem + 3vw, 2.8rem);
+		line-height: 1.02;
+		letter-spacing: -0.025em;
+		margin: 0 0 10px;
+	}
+	.pieza .desc { color: var(--tinta-media); margin: 0 0 18px; font-size: 0.98rem; }
+	.pieza .pie { display: flex; align-items: baseline; gap: 14px; }
+	.pieza .precio {
+		font-family: var(--display);
+		font-size: 1.7rem;
+		color: var(--laton);
+		letter-spacing: -0.01em;
+	}
+	.pieza .racion { font-size: 0.82rem; color: var(--tinta-baja); }
+
+	/* ---------- secciones y lista de UNA columna ---------- */
+	.seccion { padding: 56px 0 8px; }
+	.seccion > h3 {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin: 0 var(--gutter) 8px;
+		font-family: var(--display);
+		font-size: 1.45rem;
+		font-weight: 400;
+		letter-spacing: -0.015em;
+	}
+	.seccion > h3::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: var(--filete);
+	}
+	.seccion > .nota {
+		margin: 0 var(--gutter) 26px;
+		font-size: 0.84rem;
+		color: var(--tinta-baja);
+	}
+
+	.plato {
+		display: grid;
+		grid-template-columns: 1fr 84px;
+		gap: 18px;
+		align-items: start;
+		padding: 20px var(--gutter);
+		border-top: 1px solid rgba(255, 250, 242, 0.07);
+		text-align: left;
+		width: 100%;
+		background: none;
+		border-left: 0;
+		border-right: 0;
+		border-bottom: 0;
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+		transition: background 180ms ease;
+	}
+	.plato:first-of-type { border-top: 0; }
+	.plato:hover, .plato:focus-visible { background: var(--carbon-alto); outline: none; }
+	.plato:focus-visible { box-shadow: inset 3px 0 0 var(--laton); }
+
+	.plato .nombre {
+		font-family: var(--display);
+		font-size: 1.16rem;
+		letter-spacing: -0.01em;
+		margin: 0 0 4px;
+		display: flex;
+		align-items: baseline;
+		gap: 9px;
+		flex-wrap: wrap;
+	}
+	.plato .desc {
+		margin: 0;
+		font-size: 0.88rem;
+		color: var(--tinta-media);
+		line-height: 1.5;
+	}
+	.plato .precio {
+		font-family: var(--display);
+		font-size: 1.16rem;
+		color: var(--laton);
+		text-align: right;
+		white-space: nowrap;
+	}
+	.plato .mini {
+		width: 84px;
+		height: 84px;
+		object-fit: cover;
+		border-radius: 2px;
+		grid-column: 2;
+		grid-row: 1 / span 2;
+	}
+	.plato.con-foto { grid-template-columns: 1fr 84px; }
+	.plato.con-foto .precio { grid-column: 1; text-align: left; margin-top: 8px; }
+
+	.marca-fuego {
+		font-size: 0.6rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--laton-hondo);
+		border: 1px solid var(--filete);
+		padding: 2px 7px;
+		border-radius: 2px;
+		font-family: var(--ui);
+	}
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		margin-top: 64px;
+		padding: 48px var(--gutter) 120px;
+		border-top: 1px solid var(--filete);
+		text-align: center;
+	}
+	.cierre .dato { margin: 0 0 6px; font-size: 0.9rem; color: var(--tinta-media); }
+	.cierre .dato b { color: var(--tinta); font-weight: 600; }
+
+
+	@media (prefers-reduced-motion: reduce) {
+		*, *::after { animation: none !important; transition: none !important; }
+	}
+	/* consulta: nav pegajosa re-tintada al carbón */
+	.nav-carta { background: rgba(18, 13, 7, 0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--filete); }
+	.nav-carta a { color: var(--tinta-media); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--laton); box-shadow: inset 0 -2px 0 var(--laton); }
+	.pieza .maridaje { margin: 14px 0 0; font-size: 0.84rem; color: var(--tinta-baja); }
+	/* FIRMA (Etxebarri): chispas de la brasa + travelling de la pieza */
+	.chispas { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+	.chispas i { position: absolute; bottom: -8px; width: 3px; height: 3px; border-radius: 50%; background: var(--laton); opacity: 0; }
+	@media (prefers-reduced-motion: no-preference) {
+		.chispas i { animation: chispa 5.4s linear infinite; }
+		.chispas i:nth-child(1) { left: 12%; animation-delay: 0s; }
+		.chispas i:nth-child(2) { left: 27%; animation-delay: 1.3s; animation-duration: 6.3s; }
+		.chispas i:nth-child(3) { left: 44%; animation-delay: 2.2s; }
+		.chispas i:nth-child(4) { left: 58%; animation-delay: 0.7s; animation-duration: 4.6s; }
+		.chispas i:nth-child(5) { left: 71%; animation-delay: 3.1s; }
+		.chispas i:nth-child(6) { left: 84%; animation-delay: 1.9s; animation-duration: 7s; }
+		.chispas i:nth-child(7) { left: 52%; animation-delay: 2.7s; animation-duration: 5.9s; }
+		@keyframes chispa {
+			0% { transform: translateY(0) translateX(0); opacity: 0; }
+			8% { opacity: 0.85; }
+			60% { opacity: 0.35; }
+			100% { transform: translateY(-54vh) translateX(10px); opacity: 0; }
+		}
+		@supports (animation-timeline: view()) {
+			.pieza .foto img { animation: travelling linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+			@keyframes travelling { from { transform: scale(1.12); } to { transform: scale(1); } }
+		}
+	}
+	/* estado desde el panel (capa _datos-demo): agotado y precio vivos */
+	.plato.agotado .nombre { text-decoration: line-through; text-decoration-color: var(--laton-hondo); text-decoration-thickness: 2px; }
+	.plato.agotado .mini { filter: grayscale(1) opacity(0.7); }
+	.plato.agotado .desc { opacity: 0.55; }
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="portada">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/entrecot-560.webp" alt="Entrecot cortado sobre la brasa" style="--tono:#683927">
+		<div class="chispas" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+		<h1 class="marca">Casa<br>Rebolo</h1>
+		<p class="bajada">Asador de brasa · Desde 1974</p>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#pieza">La pieza de hoy</a>
+		<a href="#empezar">Para empezar</a>
+		<a href="#parrilla">De la parrilla</a>
+	</nav>
+
+	<section class="prologo">
+		<p class="eyebrow">Prólogo</p>
+		<p>Aquí no se cocina rápido. La brasa de encina tarda dos horas en estar lista y la carne
+		lleva cuarenta días esperando. Lo único que hacemos es no estropearlo.</p>
+		<p class="firma">Manuel Rebolo, segunda generación</p>
+	</section>
+
+	<article class="pieza" id="pieza">
+		<div class="foto">
+			<span class="sello">La pieza de hoy</span>
+			<video class="rev" data-video muted loop playsinline preload="metadata" poster="https://carta.adiantai.es/media/raza/platos/tomahawk-560.webp" style="--tono:#7f5e46" aria-label="Chuletón tomahawk a la brasa, en movimiento"><source src="_media/tomahawk-hero.mp4" type="video/mp4"></video>
+		</div>
+		<div class="texto">
+			<h2>Tomahawk de vaca vieja</h2>
+			<p class="desc">Rubia gallega de ocho años, 45 días de maduración en cámara propia. A la
+			brasa de encina, sal de Formentera y nada más.</p>
+			<div class="pie">
+				<span class="precio">68 €</span>
+				<span class="racion">pieza de 1,2 kg · para dos</span>
+			</div>
+			<p class="maridaje">La casa la saca con un mencía de Ribeira Sacra (copa, 3,50 €).</p>
+		</div>
+	</article>
+
+	<section class="seccion" id="empezar">
+		<h3>Para empezar</h3>
+		<p class="nota">Se sirve para el centro de la mesa.</p>
+
+		<button class="plato con-foto" data-plato="jamon">
+			<div>
+				<p class="nombre">Jamón de bellota</p>
+				<p class="desc">Cortado a cuchillo delante de usted. 100 % ibérico, cuatro años de bodega.</p>
+				<p class="precio">32 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/jamon-iberico-360.webp" alt="" style="--tono:#ac7478">
+		</button>
+
+		<button class="plato con-foto" data-plato="burrata">
+			<div>
+				<p class="nombre">Burrata con tomate de la huerta</p>
+				<p class="desc">Burrata fresca sobre tomate de temporada, albahaca y aceite de oliva virgen.</p>
+				<p class="precio">16 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/burrata-360.webp" alt="Burrata con tomate" style="--tono:#593c1e">
+		</button>
+
+		<button class="plato con-foto" data-plato="pulpo">
+			<div>
+				<p class="nombre">Pulpo a la brasa <span class="marca-fuego">al fuego</span></p>
+				<p class="desc">Cocido en su punto y terminado sobre la parrilla. Cachelo y pimentón de la Vera.</p>
+				<p class="precio">24 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/pulpo-360.webp" alt="" style="--tono:#bbb198">
+		</button>
+
+		<button class="plato con-foto" data-plato="tabla">
+			<div>
+				<p class="nombre">Tabla de quesos del país</p>
+				<p class="desc">Cinco quesos gallegos con membrillo de la casa y nueces.</p>
+				<p class="precio">18 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/tabla-quesos-360.webp" alt="Tabla de quesos gallegos" style="--tono:#a59480">
+		</button>
+	</section>
+
+	<section class="seccion" id="parrilla">
+		<h3>De la parrilla</h3>
+		<p class="nota">Todas las carnes se hacen al punto que usted diga. Si no dice nada, al punto.</p>
+
+		<button class="plato con-foto" data-plato="entrecot">
+			<div>
+				<p class="nombre">Entrecot de rubia gallega <span class="marca-fuego">al fuego</span> <span class="marca-fuego">la que más sale</span></p>
+				<p class="desc">400 g con hueso, 30 días de maduración. Patata revolcona y pimiento asado.</p>
+				<p class="precio">29 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/entrecot-360.webp" alt="" style="--tono:#683927">
+		</button>
+
+		<button class="plato con-foto" data-plato="solomillo">
+			<div>
+				<p class="nombre">Solomillo con foie <span class="marca-fuego">al fuego</span></p>
+				<p class="desc">Solomillo de ternera, foie fresco a la plancha y reducción de Pedro Ximénez.</p>
+				<p class="precio">27 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/solomillo-360.webp" alt="" style="--tono:#7c4727">
+		</button>
+
+		<button class="plato con-foto" data-plato="lubina">
+			<div>
+				<p class="nombre">Lubina salvaje a la espalda</p>
+				<p class="desc">Pieza entera de la lonja de Bueu, abierta a la brasa con ajo y guindilla.</p>
+				<p class="precio">26 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/lubina-360.webp" alt="" style="--tono:#7c6c4d">
+		</button>
+
+		<button class="plato con-foto" data-plato="tartar">
+			<div>
+				<p class="nombre">Steak tartar de la casa</p>
+				<p class="desc">Vaca vieja cortada a cuchillo, mostaza antigua y yema curada. Se prepara en sala.</p>
+				<p class="precio">22 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/steak-tartar-360.webp" alt="Steak tartar" style="--tono:#3f3c35">
+		</button>
+	</section>
+
+	<section class="seccion">
+		<h3>Para terminar</h3>
+		<p class="nota">Los postres son los del día y se los canta el camarero: la tarta de queso
+		de la abuela no falta nunca, el resto depende de lo que haya en el horno.</p>
+	</section>
+
+	<footer class="cierre">
+		<p class="dato"><b>Casa Rebolo</b></p>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+<script src="_video.js" defer></script>
+<script src="_datos-demo.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ded7c9">
+<title>Kaido · Cocina japonesa</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 07 — BARRO · arquetipo: japonés, nikkei, sushi, cocina de autor
+	   Ley: CAPÍTULO → foto vertical centrada → texto a dos columnas. Muchísimo aire.
+	   La carta se lee despacio, que es el ritmo que quiere ese restaurante.
+	   Grotesca en minúscula (nada de caja alta) y un rojo sello como único acento.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): barro: muy lento y con aire, el ritmo con que se lee esa carta */
+		--rev-dur:1100ms;
+		--rev-desp:12px;
+		--rev-escala:1.03;
+		--rev-escalon:110ms;
+		--rev-satura:.8;
+		--arena: #ded7c9;
+		--arena-hondo: #d2c9b8;
+		--tinta: #1a1a18;
+		--tinta-media: #6b675e;
+		--sello: #b8402f;
+		--filete: rgba(26, 26, 24, 0.16);
+
+		--ui: 'Helvetica Neue', Inter, -apple-system, 'Segoe UI', Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 26px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--arena);
+		color: var(--tinta);
+		font-family: var(--ui);
+		font-size: 15px;
+		line-height: 1.62;
+		letter-spacing: -0.01em;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- portada ---------- */
+	.portada { padding: 96px 0 76px; }
+	.portada .kanji {
+		font-size: 0.8rem;
+		letter-spacing: 0.5em;
+		color: var(--sello);
+		margin: 0 0 20px;
+	}
+	.portada h1 {
+		font-size: clamp(3.4rem, 2.6rem + 7vw, 5rem);
+		font-weight: 500;
+		line-height: 0.9;
+		letter-spacing: -0.045em;
+		margin: 0 0 24px;
+		text-transform: lowercase;
+	}
+	.portada .claim {
+		font-size: 1.02rem;
+		line-height: 1.5;
+		color: var(--tinta-media);
+		max-width: 26ch;
+		margin: 0;
+	}
+
+	/* ---------- capítulo ---------- */
+	.capitulo { padding: 78px 0 0; }
+	.capitulo > header {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: start;
+		gap: 16px;
+		padding-bottom: 18px;
+		border-bottom: 1px solid var(--filete);
+	}
+	.capitulo > header .titulo { min-width: 0; }
+	.capitulo > header .nombre {
+		font-size: 1.5rem;
+		font-weight: 500;
+		letter-spacing: -0.03em;
+		text-transform: lowercase;
+		margin: 0 0 2px;
+	}
+	.capitulo > header .jp {
+		font-size: 0.76rem;
+		letter-spacing: 0.22em;
+		color: var(--sello);
+		margin: 0;
+	}
+	.capitulo > header .num {
+		font-size: 2.6rem;
+		font-weight: 300;
+		line-height: 0.8;
+		letter-spacing: -0.05em;
+		color: var(--tinta-media);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* foto vertical centrada, con aire por los cuatro costados */
+	.lamina {
+		margin: 40px auto 38px;
+		width: 68%;
+	}
+	.lamina img {
+		width: 100%;
+		display: block;
+		aspect-ratio: 3 / 4;
+		object-fit: cover;
+	}
+	.lamina figcaption {
+		margin-top: 12px;
+		font-size: 0.74rem;
+		color: var(--tinta-media);
+		text-align: center;
+	}
+
+	/* texto a dos columnas: lo que hace que respire */
+	.intro-cap {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 18px;
+		margin-bottom: 34px;
+		font-size: 0.86rem;
+		line-height: 1.6;
+		color: var(--tinta-media);
+	}
+	.intro-cap p { margin: 0; }
+
+	/* ---------- pieza ---------- */
+	.pieza {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 18px;
+		align-items: baseline;
+		padding: 17px 0;
+		border-top: 1px solid rgba(26, 26, 24, 0.09);
+	}
+	.pieza:first-of-type { border-top: 0; }
+	.pieza .n {
+		font-size: 1.02rem;
+		font-weight: 500;
+		letter-spacing: -0.015em;
+		margin: 0 0 3px;
+	}
+	.pieza .d { margin: 0; font-size: 0.85rem; color: var(--tinta-media); line-height: 1.5; }
+	.pieza .p {
+		font-size: 1rem;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.pieza .marca {
+		display: inline-block;
+		font-size: 0.62rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--sello);
+		border: 1px solid rgba(184, 64, 47, 0.4);
+		padding: 1px 6px;
+		margin-left: 7px;
+		vertical-align: 0.14em;
+	}
+
+	/* ---------- omakase: el bloque que rompe el ritmo ---------- */
+	.omakase {
+		margin: 74px 0 0;
+		padding: 34px 26px;
+		background: var(--arena-hondo);
+		text-align: center;
+	}
+	.omakase .jp { font-size: 0.76rem; letter-spacing: 0.32em; color: var(--sello); margin: 0 0 14px; }
+	.omakase h2 {
+		font-size: 1.6rem;
+		font-weight: 500;
+		letter-spacing: -0.03em;
+		text-transform: lowercase;
+		margin: 0 0 12px;
+	}
+	.omakase p { margin: 0 0 20px; font-size: 0.88rem; color: var(--tinta-media); }
+	.omakase .precio { font-size: 2rem; font-weight: 300; letter-spacing: -0.04em; margin: 0; }
+	.omakase .letra { font-size: 0.76rem; color: var(--tinta-media); margin: 8px 0 0; }
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		margin-top: 76px;
+		padding-top: 26px;
+		border-top: 1px solid var(--filete);
+		font-size: 0.84rem;
+		color: var(--tinta-media);
+		line-height: 1.75;
+	}
+	.cierre b { display: block; color: var(--tinta); font-size: 1rem; font-weight: 500; margin-bottom: 8px; }
+	.cierre a {
+		display: inline-block;
+		margin-top: 24px;
+		padding: 13px 32px;
+		background: var(--tinta);
+		color: var(--arena);
+		text-decoration: none;
+		font-size: 0.76rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	.nav-carta { background: var(--arena); border-bottom: 1px solid var(--filete); }
+	.nav-carta a { color: var(--tinta-media); font-size: 0.82rem; text-transform: lowercase; }
+	.nav-carta a.activo { color: var(--tinta); box-shadow: inset 0 -1px 0 var(--sello); }
+	/* FIRMA (el "ma" japones): la lamina se abre como un shoji */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .lamina img.rev:not(.visto) { clip-path: inset(0 50% 0 50%); }
+		.lamina img.rev { clip-path: inset(0 0 0 0); transition: opacity var(--rev-dur) var(--rev-curva), transform var(--rev-dur) var(--rev-curva), filter var(--rev-dur) var(--rev-curva), clip-path 1150ms var(--rev-curva); }
+		.portada .kanji { animation: kanji-llega 1.7s var(--rev-curva) both; }
+		@keyframes kanji-llega { from { opacity: 0; letter-spacing: 1em; } }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="portada">
+		<p class="kanji">街道</p>
+		<h1>kaido</h1>
+		<p class="claim">Doce asientos, una barra y lo que haya llegado esa mañana de la lonja
+		de Bueu.</p>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#c1">crudos</a>
+		<a href="#c2">del fuego</a>
+		<a href="#c3">arroces</a>
+		<a href="#om">omakase</a>
+	</nav>
+
+	<section class="capitulo" id="c1">
+		<header>
+			<div class="titulo">
+				<p class="nombre">crudos</p>
+				<p class="jp">nama · 生</p>
+			</div>
+			<span class="num">01</span>
+		</header>
+
+		<figure class="lamina">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/ceviche-360.webp" alt="Sashimi de pescado del día" style="--tono:#7c6950">
+			<figcaption>Corte del día, al gusto del itamae</figcaption>
+		</figure>
+
+		<div class="intro-cap">
+			<p>El pescado se compra entero y se despieza aquí. Lo que no se corta hoy se cura o
+			se madura.</p>
+			<p>Si es su primera vez, empiece por el sashimi del día y déjese llevar.</p>
+		</div>
+
+		<article class="pieza">
+			<div><p class="n">Sashimi del día <span class="marca">Lonja</span></p><p class="d">Nueve cortes de tres pescados distintos, según subasta.</p></div>
+			<span class="p">26 €</span>
+		</article>
+		<article class="pieza">
+			<div><p class="n">Tiradito de lubina</p><p class="d">Leche de tigre de yuzu, aceite de cebollino y ají amarillo.</p></div>
+			<span class="p">18 €</span>
+		</article>
+		<article class="pieza">
+			<div><p class="n">Toro con wasabi fresco</p><p class="d">Ventresca de atún rojo, wasabi rallado al momento sobre piel de tiburón.</p></div>
+			<span class="p">24 €</span>
+		</article>
+	</section>
+
+	<section class="capitulo" id="c2">
+		<header>
+			<div class="titulo">
+				<p class="nombre">del fuego</p>
+				<p class="jp">robata · 炉端</p>
+			</div>
+			<span class="num">02</span>
+		</header>
+
+		<figure class="lamina">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/eby-panko-560.webp" alt="Langostinos en panko recién fritos" style="--tono:#a55a20">
+			<figcaption>Fritura de panko, hecha al momento</figcaption>
+		</figure>
+
+		<div class="intro-cap">
+			<p>Carbón binchotan de encina japonesa. Arde sin humo y a mucha más temperatura.</p>
+			<p>Todo lo de esta sección se hace a la vista, en la barra.</p>
+		</div>
+
+		<article class="pieza">
+			<div><p class="n">Ebi panko</p><p class="d">Langostino rebozado en panko, mayonesa de kimchi.</p></div>
+			<span class="p">15 €</span>
+		</article>
+		<article class="pieza">
+			<div><p class="n">Yakitori de muslo</p><p class="d">Pollo de corral glaseado en tare de la casa, tres brochetas.</p></div>
+			<span class="p">12 €</span>
+		</article>
+		<article class="pieza">
+			<div><p class="n">Berenjena nasu dengaku <span class="marca">Vegano</span></p><p class="d">A la brasa con miso dulce y sésamo tostado.</p></div>
+			<span class="p">11 €</span>
+		</article>
+		<article class="pieza">
+			<div><p class="n">Costilla en miso rojo</p><p class="d">Doce horas de cocción, glaseada al binchotan.</p></div>
+			<span class="p">19 €</span>
+		</article>
+	</section>
+
+	<section class="capitulo" id="c3">
+		<header>
+			<div class="titulo">
+				<p class="nombre">arroces</p>
+				<p class="jp">gohan · ご飯</p>
+			</div>
+			<span class="num">03</span>
+		</header>
+
+		<article class="pieza">
+			<div><p class="n">Chirashi del día</p><p class="d">Arroz avinagrado con el pescado del corte del día y encurtidos de la casa.</p></div>
+			<span class="p">22 €</span>
+		</article>
+		<article class="pieza">
+			<div><p class="n">Donburi de vaca</p><p class="d">Vaca gallega marcada, cebolla dulce, yema curada y arroz caliente.</p></div>
+			<span class="p">20 €</span>
+		</article>
+	</section>
+
+	<section class="omakase" id="om">
+		<p class="jp">おまかせ</p>
+		<h2>omakase</h2>
+		<p>Catorce pases decididos esa misma mañana, delante de usted, en la barra.</p>
+		<p class="precio">85 €</p>
+		<p class="letra">El ritmo lo marca el itamae</p>
+	</section>
+
+	<footer class="cierre">
+		<b>Kaido</b>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

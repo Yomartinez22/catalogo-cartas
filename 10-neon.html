@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08080c">
+<title>Sala Oscura · Coctelería</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 10 — NEÓN · arquetipo: coctelería, gastrobar nocturno, after
+	   Ley: FICHA DE INGREDIENTES, no foto. El cóctel se elige leyendo qué lleva.
+	   El argumento es TÉCNICO: calibrado para brillo bajo en una barra a oscuras.
+	   Por eso NO hay blanco puro (#fff deslumbra a 20 % de brillo): la tinta tope
+	   es #d8d8e2 y los rellenos claros no existen. Un solo neón, y sólo en acentos.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): neon: emerge de la penumbra, muy desaturado al principio */
+		--rev-dur:900ms;
+		--rev-desp:10px;
+		--rev-escala:1.05;
+		--rev-escalon:80ms;
+		--rev-satura:.45;
+		--noche: #08080c;
+		--noche-alta: #101018;
+		--tinta: #d8d8e2;           /* nunca #fff: en penumbra quema */
+		--tinta-media: #8e8ea3;
+		--tinta-baja: #5c5c70;
+		--neon: #7c5cff;
+		--neon-suave: rgba(124, 92, 255, 0.16);
+		--filete: rgba(216, 216, 226, 0.11);
+
+		--display: 'Archivo', 'Helvetica Neue', -apple-system, 'Segoe UI', Arial, sans-serif;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--noche);
+		color: var(--tinta);
+		font-family: var(--display);
+		font-size: 15px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { padding: 64px 0 34px; }
+	.cabecera .sub {
+		font-family: var(--mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--neon);
+		margin: 0 0 18px;
+	}
+	.cabecera h1 {
+		font-size: clamp(3rem, 2.2rem + 6vw, 4.2rem);
+		font-weight: 800;
+		line-height: 0.88;
+		letter-spacing: -0.045em;
+		text-transform: uppercase;
+		margin: 0 0 18px;
+	}
+	.cabecera .claim {
+		font-size: 0.98rem;
+		color: var(--tinta-media);
+		max-width: 28ch;
+		margin: 0 0 26px;
+	}
+	/* el brillo del neón, muy contenido: un halo, no un letrero */
+	.cabecera .barra-neon {
+		height: 2px;
+		background: var(--neon);
+		box-shadow: 0 0 18px rgba(124, 92, 255, 0.7);
+		width: 62px;
+	}
+
+	/* ---------- aviso de penumbra: el argumento de venta, visible ---------- */
+	.penumbra {
+		display: flex;
+		gap: 12px;
+		align-items: flex-start;
+		margin: 30px 0 10px;
+		padding: 14px 16px;
+		background: var(--noche-alta);
+		border: 1px solid var(--filete);
+		font-size: 0.84rem;
+		color: var(--tinta-media);
+	}
+	.penumbra b { color: var(--tinta); font-weight: 600; }
+
+	/* ---------- sección ---------- */
+	.seccion { margin-top: 44px; }
+	.seccion > header {
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid var(--filete);
+		margin-bottom: 6px;
+	}
+	.seccion > header h2 {
+		font-size: 1.35rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		text-transform: uppercase;
+		margin: 0;
+	}
+	.seccion > header .cuenta {
+		font-family: var(--mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.14em;
+		color: var(--tinta-baja);
+		margin-left: auto;
+	}
+
+	/* ---------- la ficha del cóctel: los ingredientes SON el diseño ---------- */
+	.coctel {
+		padding: 20px 0;
+		border-bottom: 1px solid rgba(216, 216, 226, 0.07);
+	}
+	/* Foto SOLO en los de la casa (decisión Yago 2026-07-28): el cliente no puede pedir a
+	   ciegas algo que se ha inventado el bar. Los clásicos no la llevan: un Negroni ya se
+	   sabe cómo es, y fotografiar 40 destilados no aporta nada. */
+	.coctel.con-foto {
+		display: grid;
+		grid-template-columns: 92px minmax(0, 1fr);
+		gap: 16px;
+		align-items: start;
+	}
+	.coctel.con-foto img {
+		width: 92px;
+		height: 92px;
+		object-fit: cover;
+		display: block;
+		/* en penumbra una foto a plena luz deslumbra: se baja el brillo y se sube el
+		   contraste para que siga leyéndose sin quemar la pantalla */
+		--foto-filtro: brightness(0.82) contrast(1.12);
+		border: 1px solid var(--filete);
+	}
+	.coctel.con-foto .datos { min-width: 0; }
+	.coctel .fila {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+		margin-bottom: 8px;
+	}
+	.coctel .nombre {
+		font-size: 1.14rem;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		margin: 0;
+	}
+	.coctel .precio {
+		font-family: var(--mono);
+		font-size: 1rem;
+		color: var(--neon);
+		white-space: nowrap;
+	}
+	/* los ingredientes en fila, separados por barra: se lee de un vistazo */
+	.coctel .ingredientes {
+		font-family: var(--mono);
+		font-size: 0.76rem;
+		letter-spacing: 0.02em;
+		color: var(--tinta-media);
+		margin: 0 0 12px;
+		line-height: 1.7;
+	}
+	.coctel .ingredientes span::after {
+		content: ' / ';
+		color: var(--tinta-baja);
+	}
+	.coctel .ingredientes span:last-child::after { content: ''; }
+	.coctel .ingredientes .base { color: var(--tinta); }
+
+	.coctel .pie { display: flex; gap: 8px; flex-wrap: wrap; }
+	.coctel .marca {
+		font-family: var(--mono);
+		font-size: 0.64rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		padding: 3px 8px;
+		border: 1px solid var(--filete);
+		color: var(--tinta-baja);
+	}
+	.coctel .marca.fuerte { color: var(--neon); border-color: rgba(124, 92, 255, 0.4); background: var(--neon-suave); }
+
+	/* medidor de intensidad: tres barras, sin iconos ni emoji */
+	.fuerza { display: inline-flex; align-items: center; gap: 3px; vertical-align: 0.05em; }
+	.fuerza i { width: 11px; height: 3px; background: var(--tinta-baja); display: block; }
+	.fuerza i.on { background: var(--neon); }
+
+	/* ---------- destilados ---------- */
+	.linea {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+		padding: 12px 0;
+		border-bottom: 1px solid rgba(216, 216, 226, 0.07);
+		font-size: 0.94rem;
+	}
+	.linea small { display: block; font-family: var(--mono); font-size: 0.72rem; color: var(--tinta-baja); }
+	.linea .p { font-family: var(--mono); color: var(--neon); white-space: nowrap; }
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		margin-top: 48px;
+		padding-top: 26px;
+		border-top: 1px solid var(--filete);
+		font-family: var(--mono);
+		font-size: 0.78rem;
+		letter-spacing: 0.04em;
+		color: var(--tinta-baja);
+		line-height: 1.9;
+	}
+	.cierre b {
+		display: block;
+		font-family: var(--display);
+		font-size: 1.1rem;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+		color: var(--tinta);
+		margin-bottom: 10px;
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	.gustos { position: sticky; top: 0; z-index: 20; display: flex; gap: 7px; align-items: center; overflow-x: auto; scrollbar-width: none; padding: 14px 0 16px; background: linear-gradient(var(--noche) 84%, transparent); }
+	.gustos::-webkit-scrollbar { display: none; }
+	.gustos b { flex: 0 0 auto; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tinta-baja); font-weight: 400; margin-right: 2px; }
+	.gustos button { flex: 0 0 auto; background: none; border: 1px solid var(--filete); color: var(--tinta-media); font-family: var(--mono); font-size: 0.72rem; padding: 7px 12px; cursor: pointer; }
+	.gustos button[aria-pressed='true'] { background: var(--neon-suave); border-color: rgba(124, 92, 255, 0.55); color: var(--tinta); }
+	.coctel.filtro-oculto { display: none; }
+	.seccion.filtro-vacio { display: none; }
+	/* FIRMA (Paradiso): el letrero se enciende como un neon real, una sola vez */
+	@media (prefers-reduced-motion: no-preference) {
+		.cabecera h1 { animation: neon-enciende 1.9s steps(1, end) both; }
+		.cabecera .barra-neon { animation: neon-enciende 1.9s steps(1, end) 250ms both; }
+		html.js-rev .seccion header[data-entra]:not(.visto) h2 { opacity: 0.12; }
+		.seccion header[data-entra].visto h2 { animation: neon-enciende 850ms steps(1, end) both; }
+		@keyframes neon-enciende {
+			0% { opacity: 0.1; }
+			7% { opacity: 0.85; }
+			11% { opacity: 0.18; }
+			15% { opacity: 0.9; }
+			21% { opacity: 0.3; }
+			26%, 100% { opacity: 1; }
+		}
+		.seccion.refiltrado .coctel:not(.filtro-oculto) { animation: reaparece 300ms var(--rev-curva, ease) both; }
+		.seccion.refiltrado .coctel:not(.filtro-oculto):nth-of-type(2) { animation-delay: 55ms; }
+		.seccion.refiltrado .coctel:not(.filtro-oculto):nth-of-type(3) { animation-delay: 110ms; }
+		.seccion.refiltrado .coctel:not(.filtro-oculto):nth-of-type(4) { animation-delay: 165ms; }
+		@keyframes reaparece { from { opacity: 0; transform: translateY(7px); } }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Coctelería · Vigo</p>
+		<h1>Sala<br>Oscura</h1>
+		<p class="claim">Sin carta de comida, sin televisión y sin prisa. Sólo lo que hay detrás
+		de la barra.</p>
+		<div class="barra-neon"></div>
+	</header>
+
+	<p class="penumbra"><b>Aquí hay poca luz a propósito.</b> Esta carta está calibrada para
+	leerse con el brillo del móvil al mínimo, sin deslumbrar a quien tiene enfrente.</p>
+
+	<nav class="gustos" data-filtro-grupo="gusto" aria-label="Qué le apetece">
+		<b>¿Qué le apetece?</b>
+		<button type="button" data-valor="" aria-pressed="true">Da igual</button>
+		<button type="button" data-valor="citrico" aria-pressed="false">Cítrico</button>
+		<button type="button" data-valor="amargo" aria-pressed="false">Amargo</button>
+		<button type="button" data-valor="acido" aria-pressed="false">Ácido</button>
+		<button type="button" data-valor="salino" aria-pressed="false">Salino</button>
+		<button type="button" data-valor="sin-alcohol" aria-pressed="false">Sin alcohol</button>
+	</nav>
+
+	<section class="seccion" data-filtrable>
+		<header data-entra>
+			<h2>De la casa</h2>
+			<span class="cuenta">6 · 12–14 €</span>
+		</header>
+
+		<article data-item data-gusto="citrico" class="coctel con-foto">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/chido-560.webp" alt="Niebla de Rande, servido en vaso bajo con romero" style="--tono:#c1a88d">
+			<div class="datos">
+				<div class="fila"><p class="nombre">Niebla de Rande</p><span class="precio">13 €</span></div>
+				<p class="ingredientes"><span class="base">Ginebra de enebro gallego</span><span>licor de flor de saúco</span><span>tónica de pomelo</span><span>romero quemado</span></p>
+				<div class="pie">
+					<span class="marca fuerte">Lo más pedido</span>
+					<span class="marca">Cítrico</span>
+					<span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i></i></span></span>
+				</div>
+			</div>
+		</article>
+
+		<article data-item data-gusto="amargo" class="coctel con-foto">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/azlan-560.webp" alt="Segunda Guardia, rojo profundo con naranja y borde escarchado" style="--tono:#6d3f31">
+			<div class="datos">
+				<div class="fila"><p class="nombre">Segunda Guardia</p><span class="precio">14 €</span></div>
+				<p class="ingredientes"><span class="base">Ron de 12 años</span><span>vermú de la casa</span><span>amaro</span><span>bíter de naranja</span></p>
+				<div class="pie">
+					<span class="marca">Amargo</span>
+					<span class="marca">Sin cítrico</span>
+					<span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
+				</div>
+			</div>
+		</article>
+
+		<article data-item data-gusto="salino" class="coctel con-foto">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/moscow-mule-560.webp" alt="Marea Baja, en jarra de cobre con lima y hierbabuena" style="--tono:#826646">
+			<div class="datos">
+				<div class="fila"><p class="nombre">Marea Baja</p><span class="precio">12 €</span></div>
+				<p class="ingredientes"><span class="base">Mezcal</span><span>zumo de lima</span><span>agua de mar filtrada</span><span>hierbabuena</span></p>
+				<div class="pie">
+					<span class="marca">Salino</span>
+					<span class="marca">En jarra de cobre</span>
+					<span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i></i></span></span>
+				</div>
+			</div>
+		</article>
+
+		<article data-item data-gusto="acido" class="coctel con-foto">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/new-york-sour-560.webp" alt="Sombra de Vigo, ámbar con flotador de tinto al fondo" style="--tono:#866f5c">
+			<div class="datos">
+				<div class="fila"><p class="nombre">Sombra de Vigo</p><span class="precio">13 €</span></div>
+				<p class="ingredientes"><span class="base">Whisky de centeno</span><span>limón</span><span>azúcar</span><span>flotador de mencía</span></p>
+				<div class="pie">
+					<span class="marca">Dos capas</span>
+					<span class="marca">Ácido</span>
+					<span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i></i></span></span>
+				</div>
+			</div>
+		</article>
+
+		<article data-item data-gusto="acido sin-alcohol" class="coctel con-foto">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/brooklyn-560.webp" alt="Silencio, copa alta con hierbabuena y granada" style="--tono:#6d675d">
+			<div class="datos">
+				<div class="fila"><p class="nombre">Silencio</p><span class="precio">12 €</span></div>
+				<p class="ingredientes"><span class="base">Sin alcohol</span><span>infusión fría de hibisco</span><span>granada</span><span>hierbabuena</span><span>tónica seca</span></p>
+				<div class="pie">
+					<span class="marca fuerte">Sin alcohol</span>
+					<span class="marca">Ácido</span>
+					<span class="marca">Fuerza <span class="fuerza"><i></i><i></i><i></i></span></span>
+				</div>
+			</div>
+		</article>
+
+		<!-- El único sin foto, y a propósito: no se puede fotografiar algo que aún no existe. -->
+		<article data-item data-gusto="citrico amargo acido salino sin-alcohol" class="coctel">
+			<div class="fila"><p class="nombre">La del Encargado</p><span class="precio">14 €</span></div>
+			<p class="ingredientes"><span class="base">Lo que le apetezca esa noche</span><span>dígale qué le gusta y qué odia</span></p>
+			<div class="pie">
+				<span class="marca">A medida</span>
+				<span class="marca">Sin foto: aún no existe</span>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" data-filtrable>
+		<header data-entra>
+			<h2>Clásicos</h2>
+			<span class="cuenta">bien hechos</span>
+		</header>
+
+		<article data-item data-gusto="amargo" class="coctel">
+			<div class="fila"><p class="nombre">Negroni</p><span class="precio">11 €</span></div>
+			<p class="ingredientes"><span class="base">Ginebra</span><span>vermú rojo</span><span>bíter italiano</span><span>piel de naranja</span></p>
+			<div class="pie"><span class="marca">Amargo</span><span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i class="on"></i></span></span></div>
+		</article>
+
+		<article data-item data-gusto="" class="coctel">
+			<div class="fila"><p class="nombre">Dry Martini</p><span class="precio">12 €</span></div>
+			<p class="ingredientes"><span class="base">Ginebra London Dry</span><span>vermú seco</span><span>aceituna o twist</span></p>
+			<div class="pie"><span class="marca">Seco</span><span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i class="on"></i></span></span></div>
+		</article>
+
+		<article data-item data-gusto="citrico acido" class="coctel">
+			<div class="fila"><p class="nombre">Daiquiri</p><span class="precio">10 €</span></div>
+			<p class="ingredientes"><span class="base">Ron blanco</span><span>lima exprimida al momento</span><span>azúcar</span></p>
+			<div class="pie"><span class="marca">Cítrico</span><span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i></i></span></span></div>
+		</article>
+
+		<article data-item data-gusto="amargo" class="coctel">
+			<div class="fila"><p class="nombre">Old Fashioned</p><span class="precio">12 €</span></div>
+			<p class="ingredientes"><span class="base">Bourbon</span><span>azúcar</span><span>bíter de angostura</span><span>hielo de una pieza</span></p>
+			<div class="pie"><span class="marca">Sin cítrico</span><span class="marca">Fuerza <span class="fuerza"><i class="on"></i><i class="on"></i><i class="on"></i></span></span></div>
+		</article>
+	</section>
+
+	<section class="seccion">
+		<header data-entra>
+			<h2>Destilados</h2>
+			<span class="cuenta">a copa</span>
+		</header>
+
+		<div class="linea"><span>Whisky de malta, 12 años<small>Speyside · 43 %</small></span><span class="p">9 €</span></div>
+		<div class="linea"><span>Whisky de malta, 18 años<small>Islay · 46 %, muy turbado</small></span><span class="p">16 €</span></div>
+		<div class="linea"><span>Ron agrícola<small>Martinica · 50 %</small></span><span class="p">11 €</span></div>
+		<div class="linea"><span>Mezcal espadín<small>Oaxaca · 45 %</small></span><span class="p">10 €</span></div>
+		<div class="linea"><span>Orujo de la casa<small>De Ourense · 40 %</small></span><span class="p">4 €</span></div>
+	</section>
+
+	<footer class="cierre">
+		<b>Sala Oscura</b>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

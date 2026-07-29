@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f4ec">
+<title>A Horta · Cocina de huerta</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 15 — HUERTA · arquetipo: vegetariano, healthy, cocina de huerta
+	   Referencia: ELEVEN MADISON PARK (tres estrellas que se pasaron al 100%
+	   vegetal) y AZURMENDI (Eneko Atxa: el restaurante más sostenible del
+	   mundo). Ley: la carta cuenta LA HUERTA, no el plato — cada cosa lleva su
+	   procedencia y su hora de cosecha. La palanca de venta es la frescura
+	   demostrada: "cosechado hoy a las 7:30" vende más que cualquier adjetivo.
+	   FIRMA: un TALLO crece por el margen de cada sección al entrar, y en su
+	   nudo brota una hoja. La carta crece como crece lo que sirve.
+	   ========================================================================== */
+	:root {
+		/* revelado (capa _presentacion): ligero, de mañana */
+		--rev-dur: 680ms;
+		--rev-desp: 12px;
+		--rev-escala: 1.03;
+		--rev-escalon: 75ms;
+		--rev-satura: 0.85;
+
+		--cal-verde: #f4f4ec;
+		--cal-honda: #eaeadf;
+		--salvia: #7d8f6d;
+		--tierra: #8a6f52;
+		--tinta: #2c3527;
+		--tinta-media: #66705c;
+		--filete: rgba(44, 53, 39, 0.16);
+
+		--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 24px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--cal-verde);
+		color: var(--tinta);
+		font-family: var(--ui);
+		font-size: 16px;
+		line-height: 1.58;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { padding: 52px 0 26px; }
+	.cabecera .sub { font-size: 0.7rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--salvia); margin: 0 0 14px; }
+	.cabecera h1 {
+		font-family: var(--serif);
+		font-size: clamp(2.9rem, 2.1rem + 6vw, 4.2rem);
+		font-weight: 500;
+		line-height: 0.95;
+		margin: 0 0 12px;
+	}
+	.cabecera .claim { font-size: 1rem; color: var(--tinta-media); max-width: 30ch; margin: 0; }
+
+	/* lo cosechado hoy: la prueba de frescura, con hora */
+	.cosecha {
+		margin: 26px 0 6px;
+		padding: 16px 18px;
+		background: #fff;
+		border-radius: 12px;
+		box-shadow: 0 2px 4px rgba(44, 53, 39, 0.05), 0 10px 24px rgba(44, 53, 39, 0.07);
+		font-size: 0.9rem;
+	}
+	.cosecha b { display: block; font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--salvia); margin-bottom: 7px; }
+	.cosecha span { color: var(--tinta-media); }
+
+	.nav-carta { background: rgba(244, 244, 236, 0.94); backdrop-filter: blur(8px); }
+	.nav-carta a { background: var(--cal-honda); border-radius: 999px; color: var(--tinta-media); font-weight: 600; font-size: 0.8rem; }
+	.nav-carta a.activo { background: var(--tinta); color: var(--cal-verde); }
+
+	/* ---------- sección con TALLO en el margen ---------- */
+	.seccion { position: relative; margin-top: 44px; padding-left: 22px; }
+	.seccion .tallo {
+		position: absolute;
+		left: 4px;
+		top: 8px;
+		bottom: 8px;
+		width: 2px;
+		background: var(--salvia);
+		border-radius: 2px;
+		transform-origin: top;
+	}
+	/* la hoja que brota del nudo */
+	.seccion .tallo::after {
+		content: '';
+		position: absolute;
+		top: 34px;
+		left: 1px;
+		width: 12px;
+		height: 12px;
+		background: var(--salvia);
+		border-radius: 0 100% 0 100%;
+		transform: rotate(-8deg);
+		transform-origin: bottom left;
+	}
+	.seccion > h2 {
+		font-family: var(--serif);
+		font-size: 1.65rem;
+		font-weight: 500;
+		margin: 0 0 4px;
+	}
+	.seccion > .pie { font-size: 0.86rem; color: var(--tinta-media); margin: 0 0 18px; }
+
+	.plato {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 84px;
+		gap: 16px;
+		align-items: start;
+		padding: 15px 0;
+		border-bottom: 1px solid var(--filete);
+	}
+	.plato.solo-texto { grid-template-columns: 1fr; }
+	.plato .nombre { font-family: var(--serif); font-size: 1.16rem; margin: 0 0 3px; }
+	.plato .desc { margin: 0 0 6px; font-size: 0.88rem; color: var(--tinta-media); line-height: 1.5; }
+	.plato .precio { font-weight: 700; color: var(--tierra); }
+	.plato .mini { width: 84px; height: 84px; object-fit: cover; border-radius: 10px; }
+
+	/* la procedencia: el dato que vende */
+	.origen {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		color: var(--salvia);
+		font-weight: 600;
+		margin-top: 6px;
+	}
+	.origen::before { content: ''; width: 7px; height: 7px; border-radius: 0 100% 0 100%; background: var(--salvia); transform: rotate(-8deg); }
+
+	.cierre {
+		margin-top: 50px;
+		padding-top: 24px;
+		border-top: 1px solid var(--filete);
+		font-size: 0.88rem;
+		color: var(--tinta-media);
+		line-height: 1.7;
+	}
+	.cierre b { display: block; font-family: var(--serif); font-size: 1.25rem; color: var(--tinta); margin-bottom: 6px; }
+	.cierre a {
+		display: inline-block;
+		margin-top: 18px;
+		padding: 14px 32px;
+		background: var(--tinta);
+		color: var(--cal-verde);
+		text-decoration: none;
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		border-radius: 999px;
+	}
+
+	/* ---------- FIRMA (EMP / Azurmendi): el tallo crece y la hoja brota ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .seccion[data-entra]:not(.visto) .tallo { transform: scaleY(0); }
+		.seccion[data-entra] .tallo { transition: transform 1100ms var(--rev-curva, ease); }
+		html.js-rev .seccion[data-entra]:not(.visto) .tallo::after { transform: rotate(-8deg) scale(0); }
+		.seccion[data-entra] .tallo::after { transition: transform 420ms var(--rev-curva, ease) 600ms; }
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Cocina de huerta · Betanzos</p>
+		<h1>A Horta</h1>
+		<p class="claim">La huerta está a 400 metros. La carta la decide ella, no nosotros.</p>
+	</header>
+
+	<div class="cosecha" data-entra>
+		<b>Cosechado hoy a las 7:30</b>
+		<span>Tomate corazón de buey · judía perona · calabacín de flor · albahaca · frambuesa</span>
+	</div>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#crudo">De la mata</a>
+		<a href="#fuego">Del fuego</a>
+		<a href="#dulce">Dulce</a>
+	</nav>
+
+	<section class="seccion" id="crudo" data-entra>
+		<div class="tallo" aria-hidden="true"></div>
+		<h2>De la mata</h2>
+		<p class="pie">Casi sin cocina: lo que hay que hacer es no estropearlo.</p>
+
+		<article class="plato">
+			<div>
+				<p class="nombre">Tomate corazón de buey</p>
+				<p class="desc">Cortado grueso, sal de escamas, aceite arbequina y albahaca de la mañana.</p>
+				<p class="precio">11 €</p>
+				<span class="origen">Bancal 3 · cosechado hoy</span>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/burrata-360.webp" alt="Tomate con burrata y albahaca" style="--tono:#593c1e">
+		</article>
+
+		<article class="plato">
+			<div>
+				<p class="nombre">Ensalada de la semana</p>
+				<p class="desc">Lo que la huerta dé: hojas, flores y una vinagreta de miel de nuestras colmenas.</p>
+				<p class="precio">10 €</p>
+				<span class="origen">Cambia cada lunes</span>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/ensalada-temporada-360.webp" alt="Ensalada de hojas y flores de temporada" style="--tono:#a49266">
+		</article>
+
+		<article class="plato solo-texto">
+			<div>
+				<p class="nombre">Gazpacho de tomate asado</p>
+				<p class="desc">Con cereza de nuestra higuera vecina y aceite de albahaca.</p>
+				<p class="precio">8 €</p>
+				<span class="origen">Solo mientras dure el tomate</span>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="fuego" data-entra>
+		<div class="tallo" aria-hidden="true"></div>
+		<h2>Del fuego</h2>
+		<p class="pie">Brasa de sarmiento de las viñas de al lado.</p>
+
+		<article class="plato">
+			<div>
+				<p class="nombre">Huevo de nuestras gallinas</p>
+				<p class="desc">A baja temperatura sobre parmentier ahumada y setas de la carballeira.</p>
+				<p class="precio">12 €</p>
+				<span class="origen">Gallinas con nombre: hoy puso Carmiña</span>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/huevo-baja-temperatura-360.webp" alt="Huevo a baja temperatura sobre parmentier" style="--tono:#52483a">
+		</article>
+
+		<article class="plato solo-texto">
+			<div>
+				<p class="nombre">Calabacín de flor a la brasa</p>
+				<p class="desc">Entero, con romesco de almendra y su propia flor frita.</p>
+				<p class="precio">13 €</p>
+				<span class="origen">Bancal 1 · variedad de la abuela</span>
+			</div>
+		</article>
+
+		<article class="plato solo-texto">
+			<div>
+				<p class="nombre">Arroz de verduras asadas</p>
+				<p class="desc">Meloso, con caldo de las pieles y los tallos. Aquí no se tira nada.</p>
+				<p class="precio">14 €</p>
+				<span class="origen">Mínimo dos personas · 30 minutos</span>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="dulce" data-entra>
+		<div class="tallo" aria-hidden="true"></div>
+		<h2>Dulce</h2>
+
+		<article class="plato solo-texto">
+			<div>
+				<p class="nombre">Frambuesas con nata de Arzúa</p>
+				<p class="desc">Cogidas esta mañana. La nata se monta al pedirlas.</p>
+				<p class="precio">7 €</p>
+				<span class="origen">Del seto del fondo · cosechado hoy</span>
+			</div>
+		</article>
+
+		<article class="plato solo-texto">
+			<div>
+				<p class="nombre">Bizcocho de calabaza y miel</p>
+				<p class="desc">Templado, con helado de leche fresca.</p>
+				<p class="precio">6,50 €</p>
+				<span class="origen">La miel, de nuestras seis colmenas</span>
+			</div>
+		</article>
+	</section>
+
+	<footer class="cierre">
+		<b>A Horta</b>
+		La huerta se visita: pídaselo a quien le atiende
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

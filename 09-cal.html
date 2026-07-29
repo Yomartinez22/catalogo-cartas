@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf7f0">
+<title>Areal · Arrocería de playa</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 09 — CAL · arquetipo: chiringuito, arrocería, terraza, mediterráneo
+	   Ley: MUCHO BLANCO, tarjeta ancha, sombra suave. Fotos a plena luz.
+	   El argumento no es estético sino TÉCNICO: se lee con el móvil al sol.
+	   Por eso el texto va a 7:1 o más de contraste y el cuerpo sube a 16px.
+	   Nada de gris claro sobre blanco: al sol desaparece.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): cal: ligero, como la luz de mediodia */
+		--rev-dur:700ms;
+		--rev-desp:16px;
+		--rev-escala:1.04;
+		--rev-escalon:70ms;
+		--rev-satura:.8;
+		--cal: #fbf7f0;
+		--cal-hondo: #f2ece1;
+		--azul: #16324a;      /* 12.4:1 sobre la cal */
+		--azul-medio: #3c5b76; /* 6.4:1 — el gris mas claro que aguanta el sol */
+		--terracota: #b8501f;  /* 5.3:1 */
+		--mar: #7ba7bc;
+
+		--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--cal);
+		color: var(--azul);
+		font-family: var(--ui);
+		font-size: 16px;   /* al sol y de pie, 15px se queda corto */
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding-bottom: 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { padding: 46px var(--gutter) 34px; }
+	.cabecera .sub {
+		font-size: 0.74rem;
+		font-weight: 700;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--terracota);
+		margin: 0 0 16px;
+	}
+	.cabecera h1 {
+		font-family: var(--serif);
+		font-size: clamp(3rem, 2.2rem + 6vw, 4.2rem);
+		font-weight: 400;
+		line-height: 0.95;
+		margin: 0 0 16px;
+	}
+	.cabecera .claim {
+		font-size: 1.06rem;
+		line-height: 1.5;
+		color: var(--azul-medio);
+		max-width: 26ch;
+		margin: 0 0 24px;
+	}
+	.cabecera .aviso-sol {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 12px 15px;
+		background: var(--cal-hondo);
+		border-radius: 14px;
+		font-size: 0.86rem;
+		color: var(--azul-medio);
+	}
+	.cabecera .aviso-sol b { color: var(--azul); }
+
+	/* ---------- sección ---------- */
+	.seccion { padding: 34px var(--gutter) 6px; }
+	.seccion > h2 {
+		font-family: var(--serif);
+		font-size: 1.8rem;
+		font-weight: 400;
+		margin: 0 0 4px;
+	}
+	.seccion > .pie {
+		font-size: 0.9rem;
+		color: var(--azul-medio);
+		margin: 0 0 22px;
+	}
+
+	/* ---------- tarjeta ancha con sombra suave ---------- */
+	.plato {
+		display: block;
+		width: 100%;
+		text-align: left;
+		background: #fff;
+		border: 0;
+		border-radius: 18px;
+		padding: 0;
+		margin-bottom: 16px;
+		overflow: hidden;
+		box-shadow: 0 2px 4px rgba(22, 50, 74, 0.05), 0 12px 28px rgba(22, 50, 74, 0.09);
+		font: inherit;
+		color: inherit;
+		cursor: pointer;
+		transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+	}
+	.plato:hover, .plato:focus-visible {
+		transform: translateY(-3px);
+		box-shadow: 0 4px 8px rgba(22, 50, 74, 0.07), 0 20px 40px rgba(22, 50, 74, 0.14);
+		outline: none;
+	}
+	.plato:focus-visible { outline: 3px solid var(--terracota); outline-offset: 3px; }
+
+	.plato img {
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
+		display: block;
+	}
+	.plato .cuerpo { padding: 16px 18px 18px; }
+	.plato .fila {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+		margin-bottom: 5px;
+	}
+	.plato .nombre {
+		font-family: var(--serif);
+		font-size: 1.24rem;
+		margin: 0;
+		line-height: 1.2;
+	}
+	.plato .precio {
+		font-size: 1.16rem;
+		font-weight: 700;
+		color: var(--terracota);
+		white-space: nowrap;
+	}
+	.plato .desc { margin: 0; font-size: 0.94rem; color: var(--azul-medio); line-height: 1.5; }
+	.plato .avisos { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+	.plato .avisos span {
+		font-size: 0.72rem;
+		font-weight: 700;
+		padding: 4px 10px;
+		border-radius: 999px;
+		background: var(--cal-hondo);
+		color: var(--azul-medio);
+	}
+	.plato .avisos span.tiempo { background: #fdf0d9; color: #8a5a12; }
+	.plato .avisos span.dos { background: #e4eff4; color: #245a72; }
+
+	/* lista compacta para lo que no lleva foto */
+	.linea {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+		padding: 14px 2px;
+		border-bottom: 1px solid rgba(22, 50, 74, 0.12);
+	}
+	.linea .n { font-size: 1rem; }
+	.linea .n small { display: block; font-size: 0.86rem; color: var(--azul-medio); }
+	.linea .p { font-weight: 700; color: var(--terracota); white-space: nowrap; }
+
+	/* ---------- franja de mar ---------- */
+	.franja {
+		margin: 34px 0;
+		padding: 30px var(--gutter);
+		background: var(--azul);
+		color: #fff;
+	}
+	.franja h2 { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; margin: 0 0 10px; }
+	.franja p { margin: 0; font-size: 0.96rem; color: rgba(255, 255, 255, 0.85); line-height: 1.55; }
+	.franja .horas {
+		display: flex;
+		gap: 10px;
+		margin-top: 18px;
+		flex-wrap: wrap;
+	}
+	.franja .horas span {
+		font-size: 0.82rem;
+		font-weight: 700;
+		padding: 7px 14px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.16);
+	}
+
+	/* ---------- cierre ---------- */
+	.cierre { padding: 20px var(--gutter) 0; }
+	.cierre .datos {
+		background: var(--cal-hondo);
+		border-radius: 18px;
+		padding: 22px 20px;
+		font-size: 0.94rem;
+		color: var(--azul-medio);
+		line-height: 1.7;
+	}
+	.cierre .datos b { display: block; font-family: var(--serif); font-size: 1.2rem; color: var(--azul); margin-bottom: 8px; }
+	.cierre a {
+		display: block;
+		margin-top: 18px;
+		padding: 17px;
+		background: var(--terracota);
+		color: #fff;
+		text-align: center;
+		text-decoration: none;
+		border-radius: 999px;
+		font-size: 1rem;
+		font-weight: 700;
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	.nav-carta { background: rgba(251, 247, 240, 0.94); backdrop-filter: blur(8px); }
+	.nav-carta a { background: var(--cal-hondo); border-radius: 999px; color: var(--azul-medio); font-weight: 700; font-size: 0.8rem; }
+	.nav-carta a.activo { background: var(--azul); color: #fff; }
+	/* FIRMA (Casa Jondal): un barrido de sol cruza la tarjeta al entrar */
+	.plato { position: relative; }
+	.plato::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%); transform: translateX(-140%); }
+	@media (prefers-reduced-motion: no-preference) {
+		.plato[data-entra].visto::after { animation: sol 1000ms ease-out 350ms both; }
+		@keyframes sol { to { transform: translateX(140%); } }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Arrocería · Praia de Patos</p>
+		<h1>Areal</h1>
+		<p class="claim">Arroces a la leña con los pies casi en la arena, desde 1988.</p>
+		<p class="aviso-sol"><b>☀</b> Carta pensada para leerse al sol. Si le molesta el brillo,
+		suba el contraste del móvil.</p>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#arroces">Arroces</a>
+		<a href="#centro">Para el centro</a>
+		<a href="#dulces">Dulces</a>
+	</nav>
+
+	<section class="seccion" id="arroces">
+		<h2>Los arroces</h2>
+		<p class="pie">Todos se hacen al momento en paella de hierro. Mínimo dos personas y el
+		precio es por persona.</p>
+
+		<button class="plato" data-entra>
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/arroz-carabinero-560.webp" alt="Arroz de carabinero en la paella" style="--tono:#91643b">
+			<div class="cuerpo">
+				<div class="fila"><p class="nombre">Arroz de carabinero</p><span class="precio">27 €</span></div>
+				<p class="desc">Caldo de sus cabezas hecho la víspera, dos carabineros enteros por persona.</p>
+				<div class="avisos"><span class="tiempo">40 minutos</span><span class="dos">Mínimo 2 personas</span><span>Crustáceos</span></div>
+			</div>
+		</button>
+
+		<button class="plato" data-entra>
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/pulpo-560.webp" alt="Arroz meloso de pulpo" style="--tono:#bbb198">
+			<div class="cuerpo">
+				<div class="fila"><p class="nombre">Arroz meloso de pulpo</p><span class="precio">22 €</span></div>
+				<p class="desc">Con cachelo, pimentón de la Vera y un toque de tinta. El que más piden los de aquí.</p>
+				<div class="avisos"><span class="tiempo">35 minutos</span><span class="dos">Mínimo 2 personas</span><span>Moluscos</span></div>
+			</div>
+		</button>
+
+		<button class="plato" data-entra>
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/ensalada-temporada-560.webp" alt="Arroz de verduras de la huerta" style="--tono:#a49266">
+			<div class="cuerpo">
+				<div class="fila"><p class="nombre">Arroz de verduras de la huerta</p><span class="precio">19 €</span></div>
+				<p class="desc">Alcachofa, judía perona, pimiento asado y ajos tiernos. Caldo de verduras asadas.</p>
+				<div class="avisos"><span class="tiempo">35 minutos</span><span class="dos">Mínimo 2 personas</span><span>Vegano</span></div>
+			</div>
+		</button>
+	</section>
+
+	<section class="franja">
+		<h2>Mientras espera el arroz</h2>
+		<p>Cuarenta minutos dan para una cerveza fría y algo del centro. Se lo traemos primero.</p>
+		<div class="horas"><span>Cocina 13:00–16:30</span><span>Y 20:00–23:00</span></div>
+	</section>
+
+	<section class="seccion" id="centro">
+		<h2>Para el centro</h2>
+		<p class="pie">Se pide y se comparte.</p>
+
+		<button class="plato" data-entra>
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/carpaccio-gambon-560.webp" alt="Carpaccio de gambón" style="--tono:#a68d60">
+			<div class="cuerpo">
+				<div class="fila"><p class="nombre">Carpaccio de gambón</p><span class="precio">17 €</span></div>
+				<p class="desc">Abierto y aliñado con lima, aceite de oliva y cebollino. Se come frío.</p>
+				<div class="avisos"><span>Crustáceos</span></div>
+			</div>
+		</button>
+
+		<div class="linea">
+			<span class="n">Ensaladilla de la casa<small>Con ventresca de bonito y huevo de corral</small></span>
+			<span class="p">9 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Navajas a la plancha<small>Ocho piezas, con limón y perejil</small></span>
+			<span class="p">15 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Pimientos de Padrón<small>De Herbón, algunos pican</small></span>
+			<span class="p">8 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Tomate de la huerta con atún<small>Tomate de temporada, sal en escamas</small></span>
+			<span class="p">11 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Croquetas de choco<small>Seis unidades, con alioli suave</small></span>
+			<span class="p">9,50 €</span>
+		</div>
+	</section>
+
+	<section class="seccion" id="dulces">
+		<h2>Dulces y café</h2>
+		<div class="linea">
+			<span class="n">Tarta de queso al horno<small>Muy poco cuajada</small></span>
+			<span class="p">6 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Sorbete de limón al cava<small>Se sirve en copa fría</small></span>
+			<span class="p">5,50 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Café de pota<small>Como se hacía aquí siempre</small></span>
+			<span class="p">1,60 €</span>
+		</div>
+	</section>
+
+	<footer class="cierre">
+		<div class="datos">
+			<b>Areal</b>
+		</div>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

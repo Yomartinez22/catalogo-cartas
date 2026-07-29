@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f1e3">
+<title>Da Luca · Trattoria</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 11 — TRATTORIA · arquetipo: italiano (trattoria, osteria, pizzería)
+	   Referencia: OSTERIA FRANCESCANA (Módena, nº1 del mundo dos veces): la
+	   cocina italiana es memoria de casa elevada. Ley: la carta fija en serif
+	   italiana (Bodoni) + LA HOJA DEL DÍA sujeta con un clip, escrita cada
+	   mañana — la escasez con encanto, no con contador.
+	   FIRMA: la hoja del día CAE y se asienta como papel recién pinzado; los
+	   nombres de plato se escriben de izquierda a derecha.
+	   ========================================================================== */
+	:root {
+		/* revelado (capa _presentacion): cálido y doméstico */
+		--rev-dur: 750ms;
+		--rev-desp: 12px;
+		--rev-escala: 1.03;
+		--rev-escalon: 80ms;
+		--rev-satura: 0.8;
+
+		--crema: #f7f1e3;
+		--crema-honda: #efe6d1;
+		--pomodoro: #c3392c;
+		--oliva: #5a6b3f;
+		--tinta: #2b2620;
+		--tinta-media: #6d6355;
+		--filete: rgba(43, 38, 32, 0.18);
+
+		--serif: 'Bodoni MT', 'Didot', 'Playfair Display', Georgia, serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 24px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--crema);
+		color: var(--tinta);
+		font-family: var(--ui);
+		font-size: 16px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { text-align: center; padding: 54px 0 26px; }
+	.cabecera .sub {
+		font-size: 0.7rem;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--pomodoro);
+		margin: 0 0 14px;
+	}
+	.cabecera h1 {
+		font-family: var(--serif);
+		font-size: clamp(3rem, 2.2rem + 6vw, 4.4rem);
+		font-weight: 500;
+		line-height: 0.95;
+		letter-spacing: -0.01em;
+		margin: 0 0 12px;
+	}
+	.cabecera .claim {
+		font-family: var(--serif);
+		font-style: italic;
+		font-size: 1.08rem;
+		color: var(--tinta-media);
+		margin: 0;
+	}
+	/* el filete tricolor, discretísimo: tres hilos, no una bandera */
+	.cabecera .tricolore {
+		width: 74px;
+		height: 3px;
+		margin: 20px auto 0;
+		background: linear-gradient(90deg, var(--oliva) 33%, var(--crema) 33% 66%, var(--pomodoro) 66%);
+	}
+
+	.nav-carta { background: rgba(247, 241, 227, 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--filete); justify-content: center; }
+	.nav-carta a { color: var(--tinta-media); font-family: var(--serif); font-style: italic; font-size: 0.92rem; }
+	.nav-carta a.activo { color: var(--pomodoro); box-shadow: inset 0 -2px 0 var(--pomodoro); }
+
+	/* ---------- LA HOJA DEL DÍA: papel pinzado, ligeramente torcido ---------- */
+	.hoja {
+		position: relative;
+		margin: 34px 6px 10px;
+		background: #fffdf6;
+		border: 1px solid var(--filete);
+		box-shadow: 0 10px 26px rgba(43, 38, 32, 0.13);
+		transform: rotate(-1.2deg);
+		padding: 26px 22px 22px;
+	}
+	.hoja::before {
+		/* el clip que la sujeta */
+		content: '';
+		position: absolute;
+		top: -12px;
+		left: 50%;
+		width: 46px;
+		height: 22px;
+		transform: translateX(-50%);
+		background: var(--pomodoro);
+		border-radius: 4px 4px 0 0;
+		box-shadow: 0 2px 5px rgba(43, 38, 32, 0.3);
+	}
+	.hoja .fecha {
+		font-size: 0.66rem;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: var(--tinta-media);
+		text-align: center;
+		margin: 0 0 6px;
+	}
+	.hoja h2 {
+		font-family: var(--serif);
+		font-style: italic;
+		font-size: 1.5rem;
+		font-weight: 500;
+		text-align: center;
+		margin: 0 0 18px;
+	}
+	.hoja .especial {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		padding: 10px 0;
+		border-top: 1px dashed var(--filete);
+	}
+	.hoja .especial .n { font-family: var(--serif); font-style: italic; font-size: 1.06rem; }
+	.hoja .especial .raya { flex: 1; border-bottom: 1px dotted rgba(43, 38, 32, 0.3); transform: translateY(-3px); }
+	.hoja .especial .p { font-weight: 700; color: var(--pomodoro); white-space: nowrap; }
+	.hoja .especial small { display: block; font-size: 0.8rem; color: var(--tinta-media); font-family: var(--ui); font-style: normal; }
+	.hoja .pie-hoja {
+		margin: 14px 0 0;
+		text-align: center;
+		font-size: 0.78rem;
+		font-style: italic;
+		color: var(--tinta-media);
+	}
+
+	/* ---------- secciones ---------- */
+	.seccion { margin-top: 46px; }
+	.seccion > h2 {
+		font-family: var(--serif);
+		font-size: 1.7rem;
+		font-weight: 500;
+		margin: 0 0 4px;
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+	}
+	.seccion > h2::after { content: ''; flex: 1; height: 1px; background: var(--filete); }
+	.seccion > .pie { font-size: 0.86rem; color: var(--tinta-media); margin: 0 0 20px; }
+
+	.plato {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 84px;
+		gap: 16px;
+		align-items: start;
+		padding: 15px 0;
+		border-bottom: 1px solid rgba(43, 38, 32, 0.09);
+	}
+	.plato.solo-texto { grid-template-columns: 1fr; }
+	.plato .nombre {
+		font-family: var(--serif);
+		font-style: italic;
+		font-size: 1.18rem;
+		font-weight: 500;
+		margin: 0 0 3px;
+	}
+	.plato .desc { margin: 0 0 6px; font-size: 0.88rem; color: var(--tinta-media); line-height: 1.5; }
+	.plato .precio { font-weight: 700; color: var(--pomodoro); }
+	.plato .mini { width: 84px; height: 84px; object-fit: cover; border-radius: 3px; }
+
+	.casa {
+		display: inline-block;
+		font-size: 0.62rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--oliva);
+		border: 1px solid rgba(90, 107, 63, 0.45);
+		padding: 2px 7px;
+		border-radius: 2px;
+		margin-left: 8px;
+		vertical-align: 0.15em;
+		font-family: var(--ui);
+		font-style: normal;
+	}
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		margin-top: 52px;
+		padding-top: 26px;
+		border-top: 1px solid var(--filete);
+		text-align: center;
+		font-size: 0.88rem;
+		color: var(--tinta-media);
+		line-height: 1.7;
+	}
+	.cierre b { display: block; font-family: var(--serif); font-size: 1.25rem; color: var(--tinta); margin-bottom: 6px; }
+	.cierre a {
+		display: inline-block;
+		margin-top: 20px;
+		padding: 14px 34px;
+		background: var(--pomodoro);
+		color: #fffdf6;
+		text-decoration: none;
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		border-radius: 2px;
+	}
+
+	/* ---------- FIRMA (Osteria Francescana): papel pinzado + nombres que se escriben ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .hoja[data-entra]:not(.visto) { opacity: 0; transform: rotate(1.6deg) translateY(-22px); }
+		.hoja[data-entra] { transition: opacity 300ms ease-out, transform 560ms cubic-bezier(0.16, 1, 0.3, 1); }
+		html.js-rev .plato[data-entra]:not(.visto) .nombre { clip-path: inset(0 100% 0 0); }
+		.plato[data-entra] .nombre { clip-path: inset(0 0 0 0); transition: clip-path 640ms var(--rev-curva, ease) 120ms; }
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Trattoria · Vigo</p>
+		<h1>Da Luca</h1>
+		<p class="claim">Como en casa de mi madre, en Módena.</p>
+		<div class="tricolore" aria-hidden="true"></div>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#antipasti">Antipasti</a>
+		<a href="#primi">Primi</a>
+		<a href="#secondi">Secondi</a>
+		<a href="#dolci">Dolci</a>
+	</nav>
+
+	<section class="hoja" data-entra aria-label="La hoja del día">
+		<p class="fecha">Lunes 28 de julio</p>
+		<h2>Scritto stamattina</h2>
+		<div class="especial">
+			<span class="n">Vitello tonnato<small>Quedan las raciones que quedan: ocho</small></span>
+			<span class="raya"></span>
+			<span class="p">9,50 €</span>
+		</div>
+		<div class="especial">
+			<span class="n">Tagliatelle al ragú de jabalí<small>El ragú lleva desde ayer al fuego</small></span>
+			<span class="raya"></span>
+			<span class="p">17 €</span>
+		</div>
+		<p class="pie-hoja">Cuando se tacha, se acabó. Mañana habrá otra hoja.</p>
+	</section>
+
+	<section class="seccion" id="antipasti">
+		<h2>Antipasti</h2>
+		<p class="pie">Para el centro, como debe ser.</p>
+
+		<article class="plato" data-entra>
+			<div>
+				<p class="nombre">Burrata pugliese <span class="casa">La de siempre</span></p>
+				<p class="desc">Con tomate de temporada, albahaca y aceite toscano.</p>
+				<p class="precio">14 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/burrata-360.webp" alt="Burrata con tomate y albahaca" style="--tono:#593c1e">
+		</article>
+
+		<article class="plato" data-entra>
+			<div>
+				<p class="nombre">Carne cruda all'albese</p>
+				<p class="desc">Ternera cortada a cuchillo como en el Piamonte, limón y parmesano.</p>
+				<p class="precio">16 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/steak-tartar-360.webp" alt="Carne cruda cortada a cuchillo" style="--tono:#3f3c35">
+		</article>
+
+		<article class="plato" data-entra>
+			<div>
+				<p class="nombre">Ibérico curado con grissini</p>
+				<p class="desc">Lo único no italiano de la carta. Luca perdió esa discusión con Vigo.</p>
+				<p class="precio">15 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/jamon-iberico-360.webp" alt="Ibérico cortado fino con grissini" style="--tono:#ac7478">
+		</article>
+	</section>
+
+	<section class="seccion" id="primi">
+		<h2>Primi</h2>
+		<p class="pie">La pasta se hace aquí cada mañana. Se nota en el diente.</p>
+
+		<article class="plato" data-entra>
+			<div>
+				<p class="nombre">Risotto al carabinero <span class="casa">El que nos hizo conocidos</span></p>
+				<p class="desc">Carnaroli en caldo de sus cabezas, mantecado con parmesano de 30 meses. 25 minutos.</p>
+				<p class="precio">24 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/arroz-carabinero-360.webp" alt="Risotto con carabinero entero" style="--tono:#91643b">
+		</article>
+
+		<article class="plato solo-texto" data-entra>
+			<div>
+				<p class="nombre">Tagliatelle al ragú de la nonna</p>
+				<p class="desc">La receta de la madre de Luca, sin tocar una coma desde 1987.</p>
+				<p class="precio">16 €</p>
+			</div>
+		</article>
+
+		<article class="plato solo-texto" data-entra>
+			<div>
+				<p class="nombre">Gnocchi de patata con salvia</p>
+				<p class="desc">Mantequilla avellanada, salvia frita y pecorino.</p>
+				<p class="precio">14 €</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="secondi">
+		<h2>Secondi</h2>
+
+		<article class="plato" data-entra>
+			<div>
+				<p class="nombre">Branzino al forno</p>
+				<p class="desc">Lubina al horno con limón, alcaparras y aceitunas taggiasche.</p>
+				<p class="precio">22 €</p>
+			</div>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/lubina-360.webp" alt="Lubina al horno con verduras" style="--tono:#7c6c4d">
+		</article>
+
+		<article class="plato solo-texto" data-entra>
+			<div>
+				<p class="nombre">Scaloppine al marsala</p>
+				<p class="desc">Ternera al vino de Marsala con puré de patata.</p>
+				<p class="precio">19 €</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="dolci">
+		<h2>Dolci</h2>
+		<p class="pie">El tiramisú no se comparte. Se lo decimos por experiencia.</p>
+
+		<article class="plato solo-texto" data-entra>
+			<div>
+				<p class="nombre">Tiramisú de la casa <span class="casa">Obligatorio</span></p>
+				<p class="desc">Mascarpone, café del bar de abajo y cacao amargo.</p>
+				<p class="precio">6,50 €</p>
+			</div>
+		</article>
+
+		<article class="plato solo-texto" data-entra>
+			<div>
+				<p class="nombre">Panna cotta al limone</p>
+				<p class="desc">Con limones de la costa amalfitana, cuando llegan.</p>
+				<p class="precio">6 €</p>
+			</div>
+		</article>
+	</section>
+
+	<footer class="cierre">
+		<b>Da Luca</b>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

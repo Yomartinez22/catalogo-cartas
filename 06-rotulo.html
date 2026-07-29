@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e8362a">
+<title>Bruto · Bocatas y bao</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 06 — RÓTULO · arquetipo: bocatería, hamburguesería, taquería, pizzería
+	   Ley: FONDO DE COLOR POR SECCIÓN, cero tarjetas. Display perfilada montada
+	   sobre la foto. Ruidoso a propósito y legible como un cartel de calle.
+	   El producto va recortado en disco con sombra dura (calco Crav).
+	   El restaurante inventado es una BOCATERÍA y no una hamburguesería porque el banco de
+	   fotos no tiene hamburguesa: antes que fingir una, se cambia el negocio. Lo que se
+	   vende aquí es el REGISTRO, y sirve igual para una hamburguesería con SUS fotos.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): rotulo: con rebote, es el unico registro que se permite pasarse */
+		--rev-dur:520ms;
+		--rev-desp:22px;
+		--rev-escala:1.08;
+		--rev-escalon:55ms;
+		--rev-satura:.75;
+		--rev-curva:cubic-bezier(.34,1.56,.64,1);
+		--crema: #f6e7d2;
+		--rojo: #e8362a;
+		--amarillo: #ffc219;
+		--negro: #1a1a1a;
+		--verde: #2f7d4f;
+
+		--display: 'Archivo Black', 'Arial Black', Impact, sans-serif;
+		--ui: 'Archivo', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 20px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--crema);
+		color: var(--negro);
+		font-family: var(--ui);
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; overflow-x: hidden; }
+
+	/* ---------- portada ---------- */
+	.portada {
+		background: var(--rojo);
+		color: var(--crema);
+		padding: 46px var(--gutter) 0;
+		text-align: center;
+		position: relative;
+	}
+	.portada .sub {
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		margin: 0 0 16px;
+		color: var(--amarillo);
+	}
+	.portada h1 {
+		font-family: var(--display);
+		/* el trazo de 3px come ancho por los dos lados: el maximo baja a 5rem para
+		   que la palabra NO se corte a 360 (se cortaba, y el overflow-x:hidden lo tapaba) */
+		font-size: clamp(3.4rem, 2.4rem + 9vw, 5rem);
+		line-height: 0.84;
+		letter-spacing: -0.015em;
+		text-transform: uppercase;
+		margin: 0;
+		/* perfilado: el relleno es el crema y el trazo el amarillo */
+		color: var(--crema);
+		-webkit-text-stroke: 3px var(--amarillo);
+		paint-order: stroke fill;
+	}
+	.portada .lema {
+		font-family: var(--display);
+		font-size: 1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		margin: 14px 0 0;
+		color: var(--amarillo);
+	}
+	/* El producto, recortado en disco con sombra dura (calco Crav). */
+	.portada .producto {
+		width: 66%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		display: block;
+		margin: 26px auto -46px;
+		border-radius: 50%;
+		border: 6px solid var(--crema);
+		box-shadow: 10px 12px 0 var(--negro);
+		position: relative;
+		z-index: 2;
+	}
+	/* borde ondulado entre bloques de color, como un rótulo recortado */
+	.onda { display: block; width: 100%; height: 26px; }
+
+	/* ---------- secciones: cada una con su color ---------- */
+	.seccion { padding: 62px var(--gutter) 40px; }
+	.seccion.crema { background: var(--crema); }
+	.seccion.negro { background: var(--negro); color: var(--crema); }
+	.seccion.amarillo { background: var(--amarillo); }
+
+	.seccion > h2 {
+		font-family: var(--display);
+		font-size: clamp(2.4rem, 1.8rem + 5vw, 3.4rem);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		text-transform: uppercase;
+		margin: 0 0 6px;
+	}
+	.seccion.crema > h2 { color: var(--rojo); }
+	.seccion.amarillo > h2 { color: var(--negro); }
+	.seccion > .pie {
+		font-size: 0.86rem;
+		font-weight: 600;
+		margin: 0 0 30px;
+		opacity: 0.72;
+	}
+
+	/* ---------- el ítem: sin tarjeta, sólo tipografía y un filete grueso ---------- */
+	.item {
+		display: grid;
+		grid-template-columns: 88px minmax(0, 1fr);
+		gap: 14px;
+		align-items: start;
+		padding: 18px 0;
+		border-top: 3px solid currentColor;
+	}
+	.item .mini {
+		width: 88px;
+		height: 88px;
+		object-fit: cover;
+		display: block;
+		border: 3px solid currentColor;
+	}
+	.item .txt { min-width: 0; }
+	.item:first-of-type { border-top-width: 3px; }
+	.item .fila {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+	}
+	.item .nombre {
+		font-family: var(--display);
+		font-size: 1.4rem;
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+		margin: 0;
+	}
+	.item .precio {
+		font-family: var(--display);
+		font-size: 1.4rem;
+		letter-spacing: -0.02em;
+		white-space: nowrap;
+	}
+	.seccion.crema .item .precio { color: var(--rojo); }
+	.item .desc { margin: 6px 0 0; font-size: 0.9rem; line-height: 1.45; opacity: 0.78; }
+
+	.chapa {
+		display: inline-block;
+		font-size: 0.6rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		padding: 3px 8px;
+		background: var(--amarillo);
+		color: var(--negro);
+		transform: rotate(-2deg);
+		margin-left: 8px;
+		vertical-align: 0.18em;
+	}
+	.seccion.amarillo .chapa { background: var(--rojo); color: var(--crema); }
+
+	/* ---------- tira de reclamo ---------- */
+	.tira {
+		background: var(--negro);
+		color: var(--amarillo);
+		padding: 14px 0;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.tira span {
+		font-family: var(--display);
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		display: inline-block;
+		padding-right: 24px;
+		animation: correr 18s linear infinite;
+	}
+	@keyframes correr { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		background: var(--rojo);
+		color: var(--crema);
+		padding: 46px var(--gutter) 54px;
+		text-align: center;
+	}
+	.cierre h2 {
+		font-family: var(--display);
+		font-size: 2rem;
+		text-transform: uppercase;
+		margin: 0 0 10px;
+	}
+	.cierre p { margin: 0 0 4px; font-size: 0.9rem; opacity: 0.85; }
+	.cierre a {
+		display: inline-block;
+		margin-top: 24px;
+		padding: 16px 34px;
+		background: var(--amarillo);
+		color: var(--negro);
+		text-decoration: none;
+		font-family: var(--display);
+		font-size: 1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		box-shadow: 6px 6px 0 var(--negro);
+		transition: transform 140ms ease, box-shadow 140ms ease;
+	}
+	.cierre a:hover, .cierre a:focus-visible {
+		transform: translate(3px, 3px);
+		box-shadow: 3px 3px 0 var(--negro);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		* { animation: none !important; transition: none !important; }
+	}
+	.nav-carta { background: var(--negro); }
+	.nav-carta a { color: var(--crema); font-family: var(--display); font-size: 0.86rem; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--amarillo); box-shadow: inset 0 -3px 0 var(--amarillo); }
+	/* el bundle: precio cerrado y ahorro visible — sube el ticket sin fricción */
+	.combo { background: var(--amarillo); text-align: center; padding: 44px var(--gutter) 48px; border-top: 4px solid var(--negro); border-bottom: 4px solid var(--negro); }
+	.combo h2 { font-family: var(--display); font-size: 2.2rem; text-transform: uppercase; margin: 0 0 8px; transform: rotate(-1deg); }
+	.combo .que { font-weight: 600; margin: 0 0 12px; }
+	.combo .cuanto { font-family: var(--display); font-size: 3.2rem; line-height: 1; margin: 0 0 12px; color: var(--rojo); text-shadow: 3px 3px 0 var(--crema); }
+	.combo .ahorro { display: inline-block; background: var(--negro); color: var(--amarillo); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 11px; transform: rotate(1.2deg); }
+	/* FIRMA (Den): chapas que caen como pegatinas; el precio del combo se estampa */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .item[data-entra]:not(.visto) .chapa { opacity: 0; transform: translateY(-16px) rotate(-11deg); }
+		.item[data-entra] .chapa { transition: opacity 200ms ease-out 200ms, transform 460ms var(--rev-curva) 200ms; }
+		html.js-rev .combo[data-entra]:not(.visto) .cuanto { opacity: 0; transform: scale(1.6); }
+		.combo[data-entra] .cuanto { transition: opacity 180ms ease-out 150ms, transform 420ms var(--rev-curva) 150ms; }
+		html.js-rev .combo[data-entra]:not(.visto) .ahorro { opacity: 0; transform: rotate(1.2deg) translateY(8px); }
+		.combo[data-entra] .ahorro { transition: opacity 260ms ease-out 420ms, transform 320ms var(--rev-curva) 420ms; }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="portada">
+		<p class="sub">Bocatas y bao · Vigo</p>
+		<h1>Bruto</h1>
+		<p class="lema">Poca cosa, muy bien hecha</p>
+		<img class="producto rev" data-amplia src="https://carta.adiantai.es/media/stock/brioche-gamba-560.webp" alt="Bocata de gamba en pan brioche" style="--tono:#866d58">
+	</header>
+
+	<svg class="onda" viewBox="0 0 480 26" preserveAspectRatio="none" aria-hidden="true">
+		<path d="M0,26 L0,10 Q40,0 80,10 T160,10 T240,10 T320,10 T400,10 T480,10 L480,26 Z" fill="#f6e7d2"/>
+	</svg>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#barra">La barra</a>
+		<a href="#combo">El menú</a>
+		<a href="#plancha">Plancha</a>
+		<a href="#beber">Beber</a>
+	</nav>
+
+	<section class="seccion crema" id="barra">
+		<h2>De la barra</h2>
+		<p class="pie">Pan de masa madre del horno de al lado. Todo se hace al momento.</p>
+
+		<article class="item" data-entra>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/brioche-gamba-360.webp" alt="Bocata de gamba en pan brioche" style="--tono:#866d58">
+			<div class="txt">
+				<div class="fila"><p class="nombre">Bocata de gamba <span class="chapa">El más pedido</span></p><span class="precio">11 €</span></div>
+				<p class="desc">Pan brioche tostado, gamba, mayonesa de lima y cebollino. El que más sale.</p>
+			</div>
+		</article>
+
+		<article class="item" data-entra>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/bao-chignon-360.webp" alt="Bao de cochinita" style="--tono:#4a3b2d">
+			<div class="txt">
+				<div class="fila"><p class="nombre">Bao de cochinita</p><span class="precio">9,50 €</span></div>
+				<p class="desc">Dos baos al vapor rellenos de cochinita, cebolla encurtida y habanero.</p>
+			</div>
+		</article>
+
+		<article class="item" data-entra>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/steak-tartar-360.webp" alt="Tartar de vaca" style="--tono:#3f3c35">
+			<div class="txt">
+				<div class="fila"><p class="nombre">Tartar de vaca</p><span class="precio">12 €</span></div>
+				<p class="desc">Cortado a cuchillo, mostaza antigua y yema. Se sirve con pan tostado aparte.</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="combo" data-entra id="combo">
+		<h2>El menú Bruto</h2>
+		<p class="que">Cualquier cosa de la barra + algo de la plancha + bebida</p>
+		<p class="cuanto">15 €</p>
+		<span class="ahorro">Pedido suelto saldría hasta en 19,50 €</span>
+	</section>
+
+	<div class="tira"><span>Los martes, el segundo bocata a mitad de precio · Los martes, el segundo bocata a mitad de precio · Los martes, el segundo bocata a mitad de precio · </span></div>
+
+	<section class="seccion negro" id="plancha">
+		<h2>De la plancha</h2>
+		<p class="pie">Si tarda, es que está recién hecho.</p>
+
+		<article class="item" data-entra>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/eby-panko-360.webp" alt="Langostino en panko" style="--tono:#a55a20">
+			<div class="txt">
+				<div class="fila"><p class="nombre">Langostino en panko</p><span class="precio">16 €</span></div>
+				<p class="desc">Rebozado en panko japonés y frito al momento. Con mayonesa de kimchi.</p>
+			</div>
+		</article>
+
+		<article class="item" data-entra>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/pulpo-360.webp" alt="Pulpo a la brasa" style="--tono:#bbb198">
+			<div class="txt">
+				<div class="fila"><p class="nombre">Pulpo a la brasa</p><span class="precio">14 €</span></div>
+				<p class="desc">Cocido en su punto y terminado en la parrilla, con cachelo y pimentón.</p>
+			</div>
+		</article>
+
+		<article class="item" data-entra>
+			<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/ensalada-temporada-360.webp" alt="Ensalada del día" style="--tono:#a49266">
+			<div class="txt">
+				<div class="fila"><p class="nombre">Ensalada del día <span class="chapa">Vegana</span></p><span class="precio">9 €</span></div>
+				<p class="desc">Lo que haya esa semana, con vinagreta de mostaza. Para compensar.</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion amarillo" id="beber">
+		<h2>Para beber</h2>
+		<p class="pie">Cerveza de barril de la fábrica de al lado.</p>
+
+		<article class="item" data-entra>
+			<div class="fila"><p class="nombre">Caña</p><span class="precio">2,50 €</span></div>
+			<p class="desc">Rubia de barril, tirada como Dios manda.</p>
+		</article>
+
+		<article class="item" data-entra>
+			<div class="fila"><p class="nombre">IPA de la casa <span class="chapa">De barril</span></p><span class="precio">4 €</span></div>
+			<p class="desc">Hecha para nosotros, amarga y con mucho aroma a pomelo.</p>
+		</article>
+
+		<article class="item" data-entra>
+			<div class="fila"><p class="nombre">Batido de la abuela</p><span class="precio">4,50 €</span></div>
+			<p class="desc">Vainilla, chocolate o galleta. Muy espeso, con pajita gorda.</p>
+		</article>
+	</section>
+
+	<footer class="cierre">
+		<h2>Bruto</h2>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

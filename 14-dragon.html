@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a0f10">
+<title>Gran Dragón · Cocina china</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 14 — DRAGÓN · arquetipo: chino (cantonés, dim sum, wok)
+	   Referencia: HAKKASAN (la estética del cantonés premium mundial: laca
+	   oscura, oro y jade) cruzada con el ritual MÁS español que existe: en el
+	   chino se pide POR NÚMERO. Ley: cada plato lleva su número en oro, grande
+	   y tabular — pedir sin miedo a pronunciar es pedir más.
+	   La prueba social es de la casa: el sello rojo 招牌 marca lo que pide
+	   nuestra propia familia — no hay aval más honesto en un restaurante chino.
+	   FIRMA: el número RUEDA al entrar (como el contador de la comanda) y el
+	   sello rojo se estampa.
+	   ========================================================================== */
+	:root {
+		/* revelado (capa _presentacion): lacado, contenido */
+		--rev-dur: 700ms;
+		--rev-desp: 10px;
+		--rev-escala: 1.04;
+		--rev-escalon: 70ms;
+		--rev-satura: 0.7;
+
+		--laca: #1a0f10;
+		--laca-alta: #241417;
+		--rojo-laca: #9e2b25;
+		--oro: #d4af6a;
+		--jade: #7fae9e;
+		--tinta: rgba(247, 242, 233, 0.93);
+		--tinta-media: rgba(247, 242, 233, 0.6);
+		--filete: rgba(212, 175, 106, 0.26);
+
+		--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--laca);
+		color: var(--tinta);
+		font-family: var(--ui);
+		font-size: 16px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { text-align: center; padding: 54px 0 26px; border-bottom: 1px solid var(--filete); }
+	.cabecera .hanzi { font-size: 0.95rem; letter-spacing: 0.5em; color: var(--rojo-laca); margin: 0 0 14px; }
+	.cabecera h1 {
+		font-family: var(--serif);
+		font-size: clamp(2.8rem, 2rem + 5.4vw, 3.9rem);
+		font-weight: 500;
+		line-height: 0.98;
+		margin: 0 0 10px;
+	}
+	.cabecera .claim { font-size: 0.92rem; color: var(--tinta-media); margin: 0; }
+
+	/* el ritual explicado, con orgullo */
+	.ritual {
+		margin: 26px 0 6px;
+		padding: 14px 16px;
+		background: var(--laca-alta);
+		border: 1px solid var(--filete);
+		font-size: 0.86rem;
+		color: var(--tinta-media);
+		text-align: center;
+	}
+	.ritual b { color: var(--oro); }
+
+	.nav-carta { background: rgba(26, 15, 16, 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--filete); justify-content: center; }
+	.nav-carta a { color: var(--tinta-media); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--oro); box-shadow: inset 0 -2px 0 var(--oro); }
+
+	/* ---------- secciones con numeración CORRIDA, como en el chino de verdad ---------- */
+	.seccion { margin-top: 42px; }
+	.seccion > h2 {
+		font-family: var(--serif);
+		font-size: 1.5rem;
+		font-weight: 500;
+		margin: 0 0 4px;
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+	}
+	.seccion > h2 .rango { margin-left: auto; font-family: var(--ui); font-size: 0.68rem; letter-spacing: 0.14em; color: var(--tinta-media); }
+	.seccion > .filete-oro { height: 1px; background: linear-gradient(90deg, var(--oro), transparent 70%); margin-bottom: 16px; opacity: 0.55; }
+
+	.plato {
+		display: grid;
+		grid-template-columns: 58px minmax(0, 1fr);
+		gap: 14px;
+		align-items: start;
+		padding: 15px 0;
+		border-bottom: 1px solid rgba(247, 242, 233, 0.07);
+	}
+	/* el número: el protagonista tipográfico del registro */
+	.plato .num {
+		font-family: var(--serif);
+		font-size: 1.9rem;
+		line-height: 1;
+		color: var(--oro);
+		font-variant-numeric: tabular-nums;
+		overflow: hidden;
+	}
+	.plato .num span { display: block; }
+	.plato .fila { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 3px; }
+	.plato .nombre { font-size: 1.04rem; font-weight: 600; margin: 0; }
+	.plato .precio { font-weight: 700; color: var(--oro); white-space: nowrap; }
+	.plato .desc { margin: 0; font-size: 0.86rem; color: var(--tinta-media); line-height: 1.5; }
+	.plato .mini { width: 76px; height: 76px; object-fit: cover; margin-top: 8px; border: 1px solid var(--filete); }
+
+	/* el sello de la casa: 招牌 = "especialidad de la casa" */
+	.sello-casa {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		border: 2px solid var(--rojo-laca);
+		border-radius: 4px;
+		color: #d8574d;
+		font-size: 0.78rem;
+		line-height: 1.1;
+		text-align: center;
+		transform: rotate(-6deg);
+		float: right;
+		margin: 2px 0 6px 10px;
+	}
+
+	.leyenda { margin: 26px 0 0; font-size: 0.8rem; color: var(--tinta-media); text-align: center; }
+	.leyenda i { font-style: normal; color: #d8574d; }
+
+	.cierre {
+		margin-top: 48px;
+		padding-top: 24px;
+		border-top: 1px solid var(--filete);
+		text-align: center;
+		font-size: 0.86rem;
+		color: var(--tinta-media);
+		line-height: 1.7;
+	}
+	.cierre b { display: block; font-family: var(--serif); font-size: 1.2rem; color: var(--tinta); margin-bottom: 6px; }
+
+	/* ---------- FIRMA (Hakkasan + el ritual del número): rueda y se estampa ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .plato[data-entra]:not(.visto) .num span { transform: translateY(110%); }
+		.plato[data-entra] .num span { transition: transform 560ms var(--rev-curva, ease) 80ms; }
+		html.js-rev .plato[data-entra]:not(.visto) .sello-casa { opacity: 0; transform: rotate(2deg) scale(1.7); }
+		.plato[data-entra] .sello-casa { transition: opacity 150ms ease-out 420ms, transform 220ms cubic-bezier(0.16, 1, 0.3, 1) 420ms; }
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="hanzi">大龍飯店</p>
+		<h1>Gran Dragón</h1>
+		<p class="claim">Cocina cantonesa en Vigo desde 1994. Dos generaciones de la familia Chen.</p>
+	</header>
+
+	<p class="ritual"><b>Aquí se pide por número, como siempre.</b> Diga «un 3, un 9 y un 16» y
+	nosotros nos entendemos. El sello rojo marca lo que pide nuestra propia familia.</p>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#entrantes">Entrantes</a>
+		<a href="#wok">Del wok</a>
+		<a href="#arroz">Arroz y fideos</a>
+		<a href="#dimsum">Dim sum</a>
+	</nav>
+
+	<section class="seccion" id="entrantes">
+		<h2>Entrantes <span class="rango">1 – 4</span></h2>
+		<div class="filete-oro" aria-hidden="true"></div>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>1</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Rollito de primavera de la casa</p><span class="precio">4,50 €</span></div>
+				<p class="desc">Hecho aquí, no congelado. Se nota en el crujido.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>2</span></div>
+			<div>
+				<span class="sello-casa" aria-label="Especialidad de la casa">招牌</span>
+				<div class="fila"><p class="nombre">Langostinos crujientes</p><span class="precio">9,50 €</span></div>
+				<p class="desc">Fritos al momento, con salsa de la abuela Chen: agridulce de verdad, no de bote.</p>
+				<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/stock/eby-panko-360.webp" alt="Langostinos crujientes recién fritos" style="--tono:#a55a20">
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>3</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Ensalada china de brotes</p><span class="precio">6 €</span></div>
+				<p class="desc">Brotes, sésamo tostado y vinagreta de soja suave.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>4</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Sopa agripicante</p><span class="precio">5,50 €</span></div>
+				<p class="desc">La de siempre, con tofu y bambú. Pica lo justo.</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="wok">
+		<h2>Del wok <span class="rango">5 – 8</span></h2>
+		<div class="filete-oro" aria-hidden="true"></div>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>5</span></div>
+			<div>
+				<span class="sello-casa" aria-label="Especialidad de la casa">招牌</span>
+				<div class="fila"><p class="nombre">Ternera con salsa de ostras</p><span class="precio">11,50 €</span></div>
+				<p class="desc">Fuego máximo, wok hei del de verdad. El plato que pide el señor Chen.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>6</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Pollo con almendras</p><span class="precio">10 €</span></div>
+				<p class="desc">El clásico que nunca ha salido de la carta en treinta años.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>7</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Tofu mapo</p><span class="precio">9,50 €</span></div>
+				<p class="desc">Sichuanés, con pimienta que adormece. Para valientes con cuchara.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>8</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Pato crujiente medio</p><span class="precio">16 €</span></div>
+				<p class="desc">Con crepes, puerro y hoisin. Se monta en la mesa.</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="arroz">
+		<h2>Arroz y fideos <span class="rango">9 – 11</span></h2>
+		<div class="filete-oro" aria-hidden="true"></div>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>9</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Arroz frito Gran Dragón</p><span class="precio">8,50 €</span></div>
+				<p class="desc">Con langostino, char siu y huevo. El 9 de toda la vida.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>10</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Fideos chow mein</p><span class="precio">8,50 €</span></div>
+				<p class="desc">Salteados con verdura y pollo, o solo verdura si lo pide.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>11</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Udon con ternera picante</p><span class="precio">9,50 €</span></div>
+				<p class="desc">Fideo grueso, caldo corto y chili crujiente de la casa.</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="dimsum">
+		<h2>Dim sum <span class="rango">12 – 14</span></h2>
+		<div class="filete-oro" aria-hidden="true"></div>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>12</span></div>
+			<div>
+				<span class="sello-casa" aria-label="Especialidad de la casa">招牌</span>
+				<div class="fila"><p class="nombre">Bao de cochinita</p><span class="precio">6,50 €</span></div>
+				<p class="desc">Dos baos al vapor, rellenos y glaseados. Los domingos vuelan.</p>
+				<img class="mini rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/bao-chignon-360.webp" alt="Baos al vapor rellenos" style="--tono:#4a3b2d">
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>13</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Jiaozi de cerdo y cebollino</p><span class="precio">6 €</span></div>
+				<p class="desc">Seis empanadillas a la plancha, con vinagre negro.</p>
+			</div>
+		</article>
+
+		<article class="plato" data-entra>
+			<div class="num"><span>14</span></div>
+			<div>
+				<div class="fila"><p class="nombre">Har gow de gamba</p><span class="precio">6,50 €</span></div>
+				<p class="desc">Cuatro piezas al vapor, masa de cristal.</p>
+			</div>
+		</article>
+	</section>
+
+	<p class="leyenda"><i>招牌</i> = especialidad de la casa: lo que comemos nosotros los lunes,
+	cuando cerramos al público.</p>
+
+	<footer class="cierre">
+		<b>Gran Dragón</b>
+		También para llevar: pida por número
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

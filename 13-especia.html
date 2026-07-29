@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#251316">
+<title>Kamala · Cocina india</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 13 — ESPECIA · arquetipo: indio (también nepalí, pakistaní)
+	   Referencia: GAGGAN (Bangkok, varias veces nº1 de Asia): la cocina india
+	   puede ser juguetona sin dejar de ser india. Ley: ornamento RANGOLI como
+	   separador, paleta de especiero (cúrcuma, chili, cardamomo) sobre berenjena
+	   oscura, y EL DIAL DE PICANTE como interacción central.
+	   La palanca de venta es quitar el miedo nº1 del cliente español al indio:
+	   "¿picará mucho?" — eliges tu nivel y la carta responde. Elegir sin miedo
+	   es comprar. Sin fotos hasta la sesión del cliente: el registro carga en
+	   ornamento y especia (densidad = eje del registro, no carencia).
+	   FIRMA: el rangoli se DIBUJA desde el centro al entrar cada sección.
+	   ========================================================================== */
+	:root {
+		/* revelado (capa _presentacion): especiado, con cuerpo */
+		--rev-dur: 800ms;
+		--rev-desp: 12px;
+		--rev-escala: 1.04;
+		--rev-escalon: 85ms;
+		--rev-satura: 0.7;
+
+		--berenjena: #251316;
+		--berenjena-alta: #321a1e;
+		--curcuma: #e2a63e;
+		--chili: #c8502f;
+		--cardamomo: #8fa06b;
+		--tinta: rgba(248, 240, 228, 0.93);
+		--tinta-media: rgba(248, 240, 228, 0.6);
+		--filete: rgba(226, 166, 62, 0.28);
+
+		--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--berenjena);
+		color: var(--tinta);
+		font-family: var(--ui);
+		font-size: 16px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { text-align: center; padding: 54px 0 24px; }
+	.cabecera .sub { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--curcuma); margin: 0 0 14px; }
+	.cabecera h1 {
+		font-family: var(--serif);
+		font-size: clamp(3rem, 2.2rem + 6vw, 4.2rem);
+		font-weight: 500;
+		letter-spacing: 0.02em;
+		line-height: 0.95;
+		margin: 0 0 12px;
+	}
+	.cabecera .claim { font-size: 0.95rem; color: var(--tinta-media); margin: 0; }
+
+	/* rangoli: la cenefa de rombos que separa el mundo en secciones */
+	.rangoli {
+		height: 9px;
+		margin: 22px auto 0;
+		width: 180px;
+		background:
+			repeating-linear-gradient(45deg, var(--curcuma) 0 2px, transparent 2px 9px),
+			repeating-linear-gradient(-45deg, var(--curcuma) 0 2px, transparent 2px 9px);
+		opacity: 0.75;
+	}
+
+	.nav-carta { background: rgba(37, 19, 22, 0.94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--filete); justify-content: center; }
+	.nav-carta a { color: var(--tinta-media); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--curcuma); box-shadow: inset 0 -2px 0 var(--curcuma); }
+
+	/* ---------- EL DIAL DE PICANTE: la interacción que quita el miedo ---------- */
+	.dial {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		display: flex;
+		gap: 7px;
+		align-items: center;
+		overflow-x: auto;
+		scrollbar-width: none;
+		padding: 14px 0 16px;
+		background: linear-gradient(var(--berenjena) 84%, transparent);
+	}
+	.dial::-webkit-scrollbar { display: none; }
+	.dial b { flex: 0 0 auto; font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tinta-media); font-weight: 700; margin-right: 2px; }
+	.dial button {
+		flex: 0 0 auto;
+		background: none;
+		border: 1px solid var(--filete);
+		color: var(--tinta-media);
+		font: inherit;
+		font-size: 0.8rem;
+		padding: 8px 14px;
+		border-radius: 999px;
+		cursor: pointer;
+	}
+	.dial button[aria-pressed='true'] { background: rgba(226, 166, 62, 0.16); border-color: var(--curcuma); color: var(--tinta); }
+
+	/* ---------- secciones ---------- */
+	.seccion { margin-top: 42px; }
+	.seccion > h2 {
+		font-family: var(--serif);
+		font-size: 1.6rem;
+		font-weight: 500;
+		text-align: center;
+		margin: 0 0 6px;
+	}
+	.seccion > .rangoli { margin-bottom: 22px; }
+
+	.plato { padding: 15px 0; border-bottom: 1px solid rgba(248, 240, 228, 0.08); }
+	.plato .fila { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 4px; }
+	.plato .nombre { font-family: var(--serif); font-size: 1.16rem; margin: 0; }
+	.plato .precio { font-weight: 700; color: var(--curcuma); white-space: nowrap; }
+	.plato .desc { margin: 0 0 8px; font-size: 0.88rem; color: var(--tinta-media); line-height: 1.5; }
+
+	/* el nivel de picante: tres chiles como barras, del color del chili */
+	.picante { display: inline-flex; align-items: center; gap: 4px; }
+	.picante i { width: 12px; height: 4px; border-radius: 2px; background: rgba(248, 240, 228, 0.18); display: block; }
+	.picante i.on { background: var(--chili); }
+	.picante small { margin-left: 6px; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinta-media); }
+
+	.plato.filtro-oculto { display: none; }
+	.seccion.filtro-vacio { display: none; }
+
+	/* ---------- el thali: el bundle que ya existía antes que el marketing ---------- */
+	.thali {
+		margin: 48px 0 0;
+		border: 1px solid var(--filete);
+		background: var(--berenjena-alta);
+		padding: 26px 22px;
+		text-align: center;
+	}
+	.thali .rangoli { width: 120px; margin: 0 auto 16px; }
+	.thali h2 { font-family: var(--serif); font-size: 1.5rem; font-weight: 500; margin: 0 0 8px; }
+	.thali p { margin: 0 0 14px; font-size: 0.9rem; color: var(--tinta-media); line-height: 1.6; }
+	.thali .precio { font-family: var(--serif); font-size: 2.2rem; color: var(--curcuma); margin: 0; }
+	.thali .letra { font-size: 0.78rem; color: var(--tinta-media); margin: 6px 0 0; }
+
+	.cierre {
+		margin-top: 48px;
+		padding-top: 24px;
+		border-top: 1px solid var(--filete);
+		text-align: center;
+		font-size: 0.86rem;
+		color: var(--tinta-media);
+		line-height: 1.7;
+	}
+	.cierre b { display: block; font-family: var(--serif); font-size: 1.2rem; color: var(--tinta); margin-bottom: 6px; }
+
+	/* ---------- FIRMA (Gaggan): el rangoli se dibuja desde el centro ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev [data-entra]:not(.visto) .rangoli { transform: scaleX(0); }
+		[data-entra] .rangoli { transform-origin: center; transition: transform 900ms var(--rev-curva, ease) 120ms; }
+		/* al filtrar, los platos supervivientes re-entran en cascada */
+		.seccion.refiltrado .plato:not(.filtro-oculto) { animation: reaparece 300ms var(--rev-curva, ease) both; }
+		.seccion.refiltrado .plato:not(.filtro-oculto):nth-of-type(2) { animation-delay: 50ms; }
+		.seccion.refiltrado .plato:not(.filtro-oculto):nth-of-type(3) { animation-delay: 100ms; }
+		.seccion.refiltrado .plato:not(.filtro-oculto):nth-of-type(4) { animation-delay: 150ms; }
+		@keyframes reaparece { from { opacity: 0; transform: translateY(7px); } }
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera" data-entra>
+		<p class="sub">Cocina india · Santiago</p>
+		<h1>Kamala</h1>
+		<p class="claim">Las especias se tuestan y se muelen aquí, cada semana.</p>
+		<div class="rangoli" aria-hidden="true"></div>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#entrantes">Para empezar</a>
+		<a href="#curris">Currys</a>
+		<a href="#horno">Del tandoor</a>
+	</nav>
+
+	<nav class="dial" data-filtro-grupo="picante" aria-label="Cuánto picante">
+		<b>¿Cuánto picante?</b>
+		<button type="button" data-valor="" aria-pressed="true">Me da igual</button>
+		<button type="button" data-valor="suave" aria-pressed="false">Suave</button>
+		<button type="button" data-valor="medio" aria-pressed="false">Medio</button>
+		<button type="button" data-valor="bravo" aria-pressed="false">Bravo</button>
+	</nav>
+
+	<section class="seccion" id="entrantes" data-entra data-filtrable>
+		<h2>Para empezar</h2>
+		<div class="rangoli" aria-hidden="true"></div>
+
+		<article class="plato" data-item data-picante="suave">
+			<div class="fila"><p class="nombre">Samosas de verdura</p><span class="precio">6,50 €</span></div>
+			<p class="desc">Dos piezas rellenas de patata y guisante, con chutney de menta.</p>
+			<span class="picante"><i class="on"></i><i></i><i></i><small>Suave</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="suave">
+			<div class="fila"><p class="nombre">Onion bhaji</p><span class="precio">6 €</span></div>
+			<p class="desc">Cebolla crujiente en masa de garbanzo, con raita de yogur.</p>
+			<span class="picante"><i class="on"></i><i></i><i></i><small>Suave</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="medio">
+			<div class="fila"><p class="nombre">Chaat de garbanzos</p><span class="precio">7 €</span></div>
+			<p class="desc">Agridulce y fresco: garbanzo, tamarindo, yogur y sev crujiente.</p>
+			<span class="picante"><i class="on"></i><i class="on"></i><i></i><small>Medio</small></span>
+		</article>
+	</section>
+
+	<section class="seccion" id="curris" data-entra data-filtrable>
+		<h2>Currys</h2>
+		<div class="rangoli" aria-hidden="true"></div>
+
+		<article class="plato" data-item data-picante="suave">
+			<div class="fila"><p class="nombre">Korma de verduras</p><span class="precio">12 €</span></div>
+			<p class="desc">Cremoso de anacardo y coco. El que pedimos para los niños y los miedosos.</p>
+			<span class="picante"><i class="on"></i><i></i><i></i><small>Suave</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="suave">
+			<div class="fila"><p class="nombre">Dal makhani</p><span class="precio">11 €</span></div>
+			<p class="desc">Lentejas negras cocinadas toda la noche con mantequilla. Reconforta.</p>
+			<span class="picante"><i class="on"></i><i></i><i></i><small>Suave</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="medio">
+			<div class="fila"><p class="nombre">Pollo tikka masala</p><span class="precio">13,50 €</span></div>
+			<p class="desc">Marinado 24 horas, en salsa de tomate y especias tostadas.</p>
+			<span class="picante"><i class="on"></i><i class="on"></i><i></i><small>Medio</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="bravo">
+			<div class="fila"><p class="nombre">Vindaloo de cordero</p><span class="precio">14,50 €</span></div>
+			<p class="desc">De Goa, con vinagre y chili de verdad. No es una amenaza, es una promesa.</p>
+			<span class="picante"><i class="on"></i><i class="on"></i><i class="on"></i><small>Bravo</small></span>
+		</article>
+	</section>
+
+	<section class="seccion" id="horno" data-entra data-filtrable>
+		<h2>Del tandoor</h2>
+		<div class="rangoli" aria-hidden="true"></div>
+
+		<article class="plato" data-item data-picante="medio">
+			<div class="fila"><p class="nombre">Pollo tandoori</p><span class="precio">13 €</span></div>
+			<p class="desc">Medio pollo marinado en yogur y especias, al horno de barro.</p>
+			<span class="picante"><i class="on"></i><i class="on"></i><i></i><small>Medio</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="suave">
+			<div class="fila"><p class="nombre">Naan de mantequilla</p><span class="precio">3 €</span></div>
+			<p class="desc">Recién pegado a la pared del tandoor. De ajo, +0,50.</p>
+			<span class="picante"><i class="on"></i><i></i><i></i><small>Suave</small></span>
+		</article>
+
+		<article class="plato" data-item data-picante="bravo">
+			<div class="fila"><p class="nombre">Costillas achari</p><span class="precio">14 €</span></div>
+			<p class="desc">Glaseadas con especias de encurtido y chili ahumado.</p>
+			<span class="picante"><i class="on"></i><i class="on"></i><i class="on"></i><small>Bravo</small></span>
+		</article>
+	</section>
+
+	<section class="thali" data-entra>
+		<div class="rangoli" aria-hidden="true"></div>
+		<h2>Thali Kamala</h2>
+		<p>La bandeja completa: un curry a elegir, dal, arroz basmati, naan, raita y postre del
+		día. El menú degustación existía en la India antes de que se llamara así.</p>
+		<p class="precio">16,90 €</p>
+		<p class="letra">Mediodía de martes a viernes · con lassi de mango, +2 €</p>
+	</section>
+
+	<footer class="cierre">
+		<b>Kamala</b>
+		También para llevar: pídalo a quien le atiende
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

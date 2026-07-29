@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#23282b">
+<title>Bar Roque · Barra y pintxos</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 12 — PIZARRA · arquetipo: bar de tapas, barra de pintxos, sidrería
+	   Referencia: las BARRAS DE SAN SEBASTIÁN (la ciudad con más estrellas por
+	   metro de barra; Bar Nestor y su tortilla con lista de espera). Ley: TODO
+	   vive en una pizarra — tiza blanca, precios en tiza amarilla, y las fotos
+	   de los pintxos estrella pegadas como polaroids con celo.
+	   FIRMA: la tiza ESCRIBE los titulares de izquierda a derecha, y el precio
+	   del vermú aparece tachado y corregido a mano — el anclaje más viejo y más
+	   honesto del mundo: el de la pizarra de un bar.
+	   ========================================================================== */
+	:root {
+		/* revelado (capa _presentacion): seco, de bar */
+		--rev-dur: 560ms;
+		--rev-desp: 10px;
+		--rev-escala: 1.03;
+		--rev-escalon: 70ms;
+		--rev-satura: 0.85;
+
+		--pizarra: #23282b;
+		--pizarra-alta: #2b3134;
+		--tiza: rgba(245, 243, 236, 0.93);
+		--tiza-media: rgba(245, 243, 236, 0.6);
+		--tiza-amarilla: #e8d99a;
+		--tiza-azul: #a8c3cf;
+		--filete: rgba(245, 243, 236, 0.2);
+
+		--ui: 'Segoe UI', -apple-system, Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--pizarra);
+		/* la veladura de la pizarra usada: restos de tiza mal borrada */
+		background-image:
+			radial-gradient(90% 60% at 20% 10%, rgba(245, 243, 236, 0.045), transparent 60%),
+			radial-gradient(70% 50% at 85% 80%, rgba(245, 243, 236, 0.035), transparent 60%);
+		color: var(--tiza);
+		font-family: var(--ui);
+		font-size: 16px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera: el rótulo de tiza ---------- */
+	.cabecera { text-align: center; padding: 50px 0 26px; }
+	.cabecera .sub { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--tiza-media); margin: 0 0 14px; }
+	.cabecera h1 {
+		font-size: clamp(2.8rem, 2rem + 6vw, 4rem);
+		font-weight: 800;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		line-height: 0.95;
+		margin: 0 0 10px;
+		text-decoration: underline wavy rgba(245, 243, 236, 0.55) 2px;
+		text-underline-offset: 10px;
+	}
+	.cabecera .claim { font-size: 0.95rem; color: var(--tiza-media); margin: 18px 0 0; font-style: italic; }
+
+	.nav-carta { background: rgba(35, 40, 43, 0.94); backdrop-filter: blur(8px); border-bottom: 1px dashed var(--filete); justify-content: center; }
+	.nav-carta a { color: var(--tiza-media); font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--tiza-amarilla); text-decoration: underline wavy var(--tiza-amarilla) 1.5px; text-underline-offset: 6px; }
+
+	/* ---------- LO DE HOY: recuadro de tiza + precio corregido a mano ---------- */
+	.hoy {
+		margin: 30px 0 8px;
+		border: 2px dashed var(--filete);
+		padding: 20px 18px;
+	}
+	.hoy h2 {
+		font-size: 1.1rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		text-align: center;
+		margin: 0 0 4px;
+		color: var(--tiza-amarilla);
+		transform: rotate(-0.6deg);
+	}
+	.hoy .cuando { text-align: center; font-size: 0.78rem; color: var(--tiza-media); margin: 0 0 16px; }
+	.hoy .linea {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		padding: 9px 0;
+		border-top: 1px solid rgba(245, 243, 236, 0.1);
+	}
+	.hoy .linea:first-of-type { border-top: 0; }
+	.hoy .n { flex: 1; }
+	.hoy .antes {
+		position: relative;
+		color: var(--tiza-media);
+		margin-right: 8px;
+		white-space: nowrap;
+	}
+	.hoy .antes::after {
+		/* el tachón de tiza, dibujado a mano */
+		content: '';
+		position: absolute;
+		left: -3px;
+		right: -3px;
+		top: 52%;
+		height: 2px;
+		background: var(--tiza);
+		transform: rotate(-4deg);
+		transform-origin: left center;
+	}
+	.hoy .ahora { font-weight: 800; color: var(--tiza-amarilla); white-space: nowrap; }
+
+	/* ---------- pintxos con polaroid pegada con celo ---------- */
+	.seccion { margin-top: 44px; }
+	.seccion > h2 {
+		font-size: 1.35rem;
+		font-weight: 800;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		margin: 0 0 20px;
+		text-decoration: underline wavy rgba(245, 243, 236, 0.4) 2px;
+		text-underline-offset: 8px;
+		transform: rotate(-0.5deg);
+	}
+	.seccion:nth-of-type(even) > h2 { transform: rotate(0.4deg); }
+
+	.pintxo {
+		display: grid;
+		grid-template-columns: 104px minmax(0, 1fr);
+		gap: 18px;
+		align-items: center;
+		padding: 14px 0;
+	}
+	.pintxo .polaroid {
+		background: #f5f3ec;
+		padding: 6px 6px 16px;
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+		transform: rotate(-2.2deg);
+		position: relative;
+	}
+	.pintxo:nth-child(even) .polaroid { transform: rotate(1.8deg); }
+	.pintxo .polaroid::before {
+		/* el celo */
+		content: '';
+		position: absolute;
+		top: -8px;
+		left: 50%;
+		width: 44px;
+		height: 16px;
+		transform: translateX(-50%) rotate(-3deg);
+		background: rgba(245, 243, 236, 0.28);
+		border-left: 1px dashed rgba(35, 40, 43, 0.2);
+		border-right: 1px dashed rgba(35, 40, 43, 0.2);
+	}
+	.pintxo .polaroid img { width: 92px; height: 92px; object-fit: cover; display: block; }
+	.pintxo .nombre { font-weight: 700; font-size: 1.04rem; margin: 0 0 3px; }
+	.pintxo .desc { margin: 0 0 6px; font-size: 0.86rem; color: var(--tiza-media); line-height: 1.45; }
+	.pintxo .precio { font-weight: 800; color: var(--tiza-amarilla); }
+
+	/* lista de tiza a secas */
+	.raya {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		padding: 11px 0;
+		border-bottom: 1px solid rgba(245, 243, 236, 0.09);
+	}
+	.raya .n { flex: 1; }
+	.raya .n small { display: block; font-size: 0.8rem; color: var(--tiza-media); }
+	.raya .p { font-weight: 800; color: var(--tiza-amarilla); white-space: nowrap; }
+
+	.nota-tiza {
+		margin: 30px 0 0;
+		font-size: 0.85rem;
+		font-style: italic;
+		color: var(--tiza-azul);
+		text-align: center;
+	}
+
+	.cierre {
+		margin-top: 48px;
+		padding-top: 24px;
+		border-top: 2px dashed var(--filete);
+		text-align: center;
+		font-size: 0.86rem;
+		color: var(--tiza-media);
+		line-height: 1.7;
+	}
+	.cierre b { display: block; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tiza); margin-bottom: 6px; }
+
+	/* ---------- FIRMA (barras de San Sebastián): la tiza escribe ---------- */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev [data-entra]:not(.visto) > h2 { clip-path: inset(0 100% 0 0); }
+		[data-entra] > h2 { clip-path: inset(0 0 0 0); transition: clip-path 700ms var(--rev-curva, ease); }
+		html.js-rev .pintxo[data-entra]:not(.visto) .polaroid { opacity: 0; transform: rotate(-6deg) translateY(-10px); }
+		.pintxo[data-entra] .polaroid { transition: opacity 260ms ease-out, transform 460ms var(--rev-curva, ease); }
+		.pintxo:nth-child(even)[data-entra]:not(.visto) .polaroid { transform: rotate(5deg) translateY(-10px); }
+		/* el tachón del precio viejo se dibuja DESPUÉS de leerse el precio */
+		html.js-rev .hoy[data-entra]:not(.visto) .antes::after { transform: rotate(-4deg) scaleX(0); }
+		.hoy[data-entra] .antes::after { transform-origin: left center; transition: transform 380ms ease-out 700ms; }
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Barra y pintxos · Ourense</p>
+		<h1>Bar Roque</h1>
+		<p class="claim">Lo que está en la pizarra, hay. Lo que no, no.</p>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#barra">De la barra</a>
+		<a href="#racion">Raciones</a>
+		<a href="#beber">Para beber</a>
+	</nav>
+
+	<section class="hoy" data-entra>
+		<h2>La hora del vermú</h2>
+		<p class="cuando">De 12:00 a 13:30 · precios corregidos a tiza</p>
+		<div class="linea">
+			<span class="n">Vermú de grifo con su aceituna</span>
+			<span class="antes">3 €</span><span class="ahora">2,20 €</span>
+		</div>
+		<div class="linea">
+			<span class="n">Ensaladilla con picos</span>
+			<span class="antes">6 €</span><span class="ahora">4,50 €</span>
+		</div>
+	</section>
+
+	<section class="seccion" id="barra" data-entra>
+		<h2>De la barra</h2>
+
+		<article class="pintxo" data-entra>
+			<div class="polaroid"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/tosta-tartar-atun-360.webp" alt="Tosta de tartar de atún" style="--tono:#af955a"></div>
+			<div>
+				<p class="nombre">Tosta de tartar de atún</p>
+				<p class="desc">Sobre pan de cristal, con aguacate. La que se acaba primero.</p>
+				<p class="precio">4,20 €</p>
+			</div>
+		</article>
+
+		<article class="pintxo" data-entra>
+			<div class="polaroid"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/brioche-gamba-360.webp" alt="Bocado de gamba en brioche" style="--tono:#866d58"></div>
+			<div>
+				<p class="nombre">Bocado de gamba</p>
+				<p class="desc">Pan brioche tostado, gamba y mayonesa de lima.</p>
+				<p class="precio">3,90 €</p>
+			</div>
+		</article>
+
+		<article class="pintxo" data-entra>
+			<div class="polaroid"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/huevo-baja-temperatura-360.webp" alt="Huevo a baja temperatura con parmentier" style="--tono:#52483a"></div>
+			<div>
+				<p class="nombre">Huevo con parmentier</p>
+				<p class="desc">A baja temperatura, con papada. Se come con cuchara.</p>
+				<p class="precio">4,50 €</p>
+			</div>
+		</article>
+	</section>
+
+	<section class="seccion" id="racion" data-entra>
+		<h2>Raciones</h2>
+
+		<div class="raya"><span class="n">Pulpo á feira<small>Cortado con tijera, como debe ser</small></span><span class="p">16 €</span></div>
+		<div class="raya"><span class="n">Jamón cortado a mano<small>La pieza está en la barra: pídala y se corta</small></span><span class="p">18 €</span></div>
+		<div class="raya"><span class="n">Tortilla de Roque<small>Poco cuajada. Sale a las 13:00 y a las 20:30, y se acaba</small></span><span class="p">3 € pincho</span></div>
+		<div class="raya"><span class="n">Croquetas de lacón<small>Seis unidades, de la abuela de verdad</small></span><span class="p">8 €</span></div>
+		<div class="raya"><span class="n">Zamburiñas a la plancha<small>Cuando hay, hay. Hoy hay</small></span><span class="p">14 €</span></div>
+	</section>
+
+	<section class="seccion" id="beber" data-entra>
+		<h2>Para beber</h2>
+
+		<div class="raya"><span class="n">Caña bien tirada</span><span class="p">2 €</span></div>
+		<div class="raya"><span class="n">Ribeiro de la casa<small>En cunca, que aquí somos de Ourense</small></span><span class="p">1,80 €</span></div>
+		<div class="raya"><span class="n">Albariño por copa</span><span class="p">3,20 €</span></div>
+		<div class="raya"><span class="n">Sidra natural, escanciada<small>Se escancia en la barra, no en la mesa</small></span><span class="p">3 €</span></div>
+	</section>
+
+	<p class="nota-tiza">La pizarra se borra cada noche. Si mañana no está su pintxo, proteste en la barra.</p>
+
+	<footer class="cierre">
+		<b>Bar Roque</b>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

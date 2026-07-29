@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b1216">
+<title>Cepa Vella · Bar de vinos</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 08 — BODEGA · arquetipo: vinoteca, bar de vinos, carta de bodega
+	   Ley: ESTRUCTURA DE DATOS PROPIA. Un vino no es un plato: tiene uva, zona,
+	   añada y dos precios (copa y botella). Filtros por uva y zona, no por alérgeno.
+	   Manda la etiqueta tipográfica; la foto va SOLO en lo que se sirve por copa, que es
+	   lo que el cliente pide a ciegas (decisión Yago 2026-07-28). Ningún competidor QR
+	   hace esto: todos meten el vino como si fuera un plato.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): bodega: discreto -- son miniaturas, no deben robar el foco a la tabla */
+		--rev-dur:600ms;
+		--rev-desp:8px;
+		--rev-escala:1.03;
+		--rev-escalon:50ms;
+		--rev-satura:.7;
+		--vino: #1b1216;
+		--vino-alto: #251a1f;
+		--crema: #ede3d4;
+		--oro: #c7a96b;
+		--granate: #6e2436;
+		--filete: rgba(237, 227, 212, 0.15);
+
+		--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+		--ui: 'Helvetica Neue', Inter, -apple-system, 'Segoe UI', Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 22px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--vino);
+		color: var(--crema);
+		font-family: var(--ui);
+		font-size: 15px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 90px; }
+
+	/* ---------- cabecera ---------- */
+	.cabecera { padding: 54px 0 30px; text-align: center; border-bottom: 1px solid var(--filete); }
+	.cabecera .sub {
+		font-size: 0.66rem;
+		letter-spacing: 0.32em;
+		text-transform: uppercase;
+		color: var(--oro);
+		margin: 0 0 16px;
+	}
+	.cabecera h1 {
+		font-family: var(--serif);
+		font-size: clamp(2.6rem, 2rem + 4.4vw, 3.6rem);
+		font-weight: 400;
+		line-height: 0.98;
+		letter-spacing: 0.005em;
+		margin: 0 0 14px;
+	}
+	.cabecera .cuenta { font-size: 0.82rem; color: rgba(237, 227, 212, 0.55); margin: 0; }
+
+	/* ---------- filtros: por UVA y ZONA, no por alérgeno ---------- */
+	.filtros { padding: 24px 0 6px; }
+	.filtros .grupo { margin-bottom: 14px; }
+	.filtros .grupo > b {
+		display: block;
+		font-size: 0.62rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgba(237, 227, 212, 0.45);
+		margin-bottom: 9px;
+		font-weight: 400;
+	}
+	.filtros .tira {
+		display: flex;
+		gap: 7px;
+		overflow-x: auto;
+		padding-bottom: 4px;
+		scrollbar-width: none;
+	}
+	.filtros .tira::-webkit-scrollbar { display: none; }
+	.filtros button {
+		flex: 0 0 auto;
+		background: none;
+		border: 1px solid var(--filete);
+		color: rgba(237, 227, 212, 0.8);
+		font: inherit;
+		font-size: 0.78rem;
+		padding: 7px 14px;
+		cursor: pointer;
+		white-space: nowrap;
+		transition: border-color 160ms ease, color 160ms ease;
+	}
+	.filtros button:hover, .filtros button:focus-visible {
+		border-color: var(--oro);
+		color: var(--oro);
+		outline: none;
+	}
+	.filtros button[aria-pressed='true'] {
+		background: var(--oro);
+		border-color: var(--oro);
+		color: var(--vino);
+	}
+
+	/* ---------- sección ---------- */
+	.seccion { margin-top: 40px; }
+	.seccion > h2 {
+		font-family: var(--serif);
+		font-size: 1.5rem;
+		font-weight: 400;
+		letter-spacing: -0.005em;
+		margin: 0 0 4px;
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+	}
+	.seccion > h2::after { content: ''; flex: 1; height: 1px; background: var(--filete); }
+	.seccion > .pie {
+		font-size: 0.8rem;
+		color: rgba(237, 227, 212, 0.5);
+		margin: 0 0 8px;
+	}
+
+	/* cabecera de columnas: esto es una TABLA de vinos, no una lista de platos */
+	.encabezado {
+		display: grid;
+		grid-template-columns: 1fr 58px 58px;
+		gap: 10px;
+		padding: 10px 0 8px;
+		border-bottom: 1px solid var(--filete);
+		font-size: 0.6rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: rgba(237, 227, 212, 0.42);
+	}
+	.encabezado span:not(:first-child) { text-align: right; }
+
+	/* ---------- el vino: ficha, no tarjeta ---------- */
+	.vino { border-bottom: 1px solid rgba(237, 227, 212, 0.08); }
+	.vino > summary {
+		display: grid;
+		grid-template-columns: 1fr 58px 58px;
+		gap: 10px;
+		align-items: baseline;
+		padding: 15px 0;
+		cursor: pointer;
+		list-style: none;
+	}
+	/* Foto SOLO en lo que se sirve por copa (decisión Yago 2026-07-28): esa es la que el
+	   cliente pide a ciegas. Fotografiar las 214 referencias no es viable.
+	   ⚠️ La imagen es del TIPO de vino (blanco pálido, tinto de guarda, PX ambarino), NUNCA
+	   la botella de la marca: la foto de producto de una marca tiene derechos, y una botella
+	   equivocada la caza un hostelero al instante. Misma regla que app-carta/src/lib/fotos-demo.ts. */
+	.vino.con-copa > summary { grid-template-columns: 52px 1fr 58px 58px; }
+	.vino .copa-foto {
+		width: 52px;
+		height: 52px;
+		object-fit: cover;
+		display: block;
+		border: 1px solid var(--filete);
+		align-self: center;
+	}
+	.vino > summary::-webkit-details-marker { display: none; }
+	.vino .nombre {
+		font-family: var(--serif);
+		font-size: 1.08rem;
+		letter-spacing: -0.005em;
+		margin: 0 0 3px;
+	}
+	.vino .meta {
+		margin: 0;
+		font-size: 0.76rem;
+		color: rgba(237, 227, 212, 0.55);
+		letter-spacing: 0.02em;
+	}
+	.vino .meta .uva { color: var(--oro); }
+	.vino .copa, .vino .botella {
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+		font-size: 0.94rem;
+	}
+	.vino .copa { color: var(--oro); }
+	.vino .botella { color: rgba(237, 227, 212, 0.78); }
+	.vino .sin-copa { color: rgba(237, 227, 212, 0.25); }
+
+	/* la ficha ampliada: lo que un camarero contaría */
+	.vino .ficha {
+		padding: 4px 0 20px;
+		border-top: 1px dashed var(--filete);
+		margin-top: 2px;
+	}
+	.vino .ficha .nota {
+		font-size: 0.88rem;
+		line-height: 1.6;
+		color: rgba(237, 227, 212, 0.75);
+		margin: 14px 0 16px;
+	}
+	.vino .ficha .datos {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px 18px;
+	}
+	.vino .ficha .datos div { border-top: 1px solid var(--filete); padding-top: 7px; }
+	.vino .ficha .datos b {
+		display: block;
+		font-size: 0.58rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: rgba(237, 227, 212, 0.42);
+		font-weight: 400;
+		margin-bottom: 2px;
+	}
+	.vino .ficha .datos span { font-size: 0.86rem; }
+
+	/* ---------- picoteo: lo poco que se come aquí ---------- */
+	.picoteo { margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--filete); }
+	.picoteo h2 { font-family: var(--serif); font-size: 1.35rem; font-weight: 400; margin: 0 0 16px; }
+	.picoteo .l {
+		display: flex;
+		justify-content: space-between;
+		gap: 14px;
+		padding: 11px 0;
+		border-top: 1px solid rgba(237, 227, 212, 0.08);
+		font-size: 0.94rem;
+	}
+	.picoteo .l:first-of-type { border-top: 0; }
+	.picoteo .l span:last-child { color: var(--oro); font-variant-numeric: tabular-nums; }
+
+	.cierre {
+		margin-top: 44px;
+		padding-top: 24px;
+		border-top: 1px solid var(--filete);
+		font-size: 0.84rem;
+		color: rgba(237, 227, 212, 0.55);
+		line-height: 1.7;
+	}
+	.cierre b { display: block; font-family: var(--serif); font-size: 1.1rem; color: var(--crema); margin-bottom: 8px; }
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	/* filtros vivos: elegir entre 214 no es libertad, es parálisis */
+	.vino.filtro-oculto { display: none; }
+	.seccion.filtro-vacio { display: none; }
+	.consejo { margin: 26px 0 0; padding: 18px 20px; background: var(--vino-alto); border: 1px solid rgba(199, 169, 107, 0.45); }
+	.consejo b { display: block; font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--oro); font-weight: 400; margin-bottom: 8px; }
+	.consejo p { margin: 0; font-family: var(--serif); font-size: 0.98rem; line-height: 1.55; }
+	/* FIRMA (Celler de Can Roca): la copa se llena; el filtro re-presenta */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .copa-foto.rev:not(.visto) { clip-path: inset(100% 0 0 0); }
+		.copa-foto.rev { clip-path: inset(0 0 0 0); transition: opacity var(--rev-dur) var(--rev-curva), transform var(--rev-dur) var(--rev-curva), filter var(--rev-dur) var(--rev-curva), clip-path 950ms var(--rev-curva); }
+		.seccion.refiltrado .vino:not(.filtro-oculto) { animation: reaparece 300ms var(--rev-curva, ease) both; }
+		.seccion.refiltrado .vino:not(.filtro-oculto):nth-of-type(2) { animation-delay: 50ms; }
+		.seccion.refiltrado .vino:not(.filtro-oculto):nth-of-type(3) { animation-delay: 100ms; }
+		.seccion.refiltrado .vino:not(.filtro-oculto):nth-of-type(4) { animation-delay: 150ms; }
+		@keyframes reaparece { from { opacity: 0; transform: translateY(7px); } }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Bar de vinos · Santiago</p>
+		<h1>Cepa Vella</h1>
+		<p class="cuenta">214 referencias · 22 por copa</p>
+	</header>
+
+	<section class="filtros">
+		<div class="grupo">
+			<b>Por uva</b>
+			<div class="tira" data-filtro-grupo="uva">
+				<button type="button" data-valor="" aria-pressed="true">Todas</button>
+				<button type="button" data-valor="albarino" aria-pressed="false">Albariño</button>
+				<button type="button" data-valor="godello" aria-pressed="false">Godello</button>
+				<button type="button" data-valor="mencia" aria-pressed="false">Mencía</button>
+				<button type="button" data-valor="treixadura" aria-pressed="false">Treixadura</button>
+				<button type="button" data-valor="tempranillo" aria-pressed="false">Tempranillo</button>
+			</div>
+		</div>
+		<div class="grupo">
+			<b>Por zona</b>
+			<div class="tira" data-filtro-grupo="zona">
+				<button type="button" data-valor="" aria-pressed="true">Todas</button>
+				<button type="button" data-valor="rias-baixas" aria-pressed="false">Rías Baixas</button>
+				<button type="button" data-valor="ribeira-sacra" aria-pressed="false">Ribeira Sacra</button>
+				<button type="button" data-valor="valdeorras" aria-pressed="false">Valdeorras</button>
+				<button type="button" data-valor="ribera" aria-pressed="false">Ribera</button>
+				<button type="button" data-valor="jerez" aria-pressed="false">Jerez</button>
+			</div>
+		</div>
+	</section>
+
+	<section class="consejo">
+		<b>La copa de esta semana</b>
+		<p>Guímaro Finca Meixemán, un mencía de bancal sobre el Sil. Si no sabe por dónde
+		empezar entre 214 botellas, empiece por aquí: 8,50 € la copa.</p>
+	</section>
+
+	<section class="seccion" data-filtrable>
+		<h2>Blancos</h2>
+		<p class="pie">Servimos a 10 °C. Si lo prefiere más frío, dígalo.</p>
+		<div class="encabezado"><span>Referencia</span><span>Copa</span><span>Botella</span></div>
+
+		<details data-item data-uva="albarino" data-zona="rias-baixas" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/blanco-senorans-360.webp" alt="Copa de blanco palido" style="--tono:#958980">
+				<div><p class="nombre">Do Ferreiro Cepas Vellas</p><p class="meta"><span class="uva">Albariño</span> · Rías Baixas · 2021</p></div>
+				<span class="copa">7,50</span>
+				<span class="botella">42</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">De viñas de más de doscientos años en Meaño. Nada que ver con el albariño
+				joven que se espera: tiene cuerpo, sal y una acidez que aguanta décadas.</p>
+				<div class="datos">
+					<div><b>Bodega</b><span>Gerardo Méndez</span></div>
+					<div><b>Crianza</b><span>Sobre lías, 8 meses</span></div>
+					<div><b>Grado</b><span>13 %</span></div>
+					<div><b>Marida con</b><span>Marisco, pescado a la brasa</span></div>
+				</div>
+			</div>
+		</details>
+
+		<details data-item data-uva="godello" data-zona="valdeorras" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/blanco-louro-360.webp" alt="Copa de blanco con volumen" style="--tono:#3d3629">
+				<div><p class="nombre">As Sortes</p><p class="meta"><span class="uva">Godello</span> · Valdeorras · 2022</p></div>
+				<span class="copa">9</span>
+				<span class="botella">54</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">El godello que convenció a todo el mundo de que el godello era serio.
+				Rafael Palacios en estado puro: mineral, tenso y con volumen.</p>
+				<div class="datos">
+					<div><b>Bodega</b><span>Rafael Palacios</span></div>
+					<div><b>Crianza</b><span>Fudres de roble francés</span></div>
+					<div><b>Grado</b><span>13,5 %</span></div>
+					<div><b>Marida con</b><span>Pescado blanco, aves</span></div>
+				</div>
+			</div>
+		</details>
+
+		<details data-item data-uva="treixadura" data-zona="ribeiro" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/blanco-casal-arman-360.webp" alt="Copa de blanco joven" style="--tono:#b9b4a2">
+				<div><p class="nombre">Coto de Gomariz «Colleita Seleccionada»</p><p class="meta"><span class="uva">Treixadura</span> · Ribeiro · 2021</p></div>
+				<span class="copa">6</span>
+				<span class="botella">34</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">El Ribeiro que reivindica la treixadura como uva grande. Fruta blanca,
+				hierba fresca y un final salino.</p>
+				<div class="datos">
+					<div><b>Bodega</b><span>Coto de Gomariz</span></div>
+					<div><b>Crianza</b><span>Sobre lías, 6 meses</span></div>
+					<div><b>Grado</b><span>13 %</span></div>
+					<div><b>Marida con</b><span>Empanada, quesos frescos</span></div>
+				</div>
+			</div>
+		</details>
+	</section>
+
+	<section class="seccion" data-filtrable>
+		<h2>Tintos</h2>
+		<p class="pie">Los de Ribeira Sacra se sirven ligeramente frescos, a 14 °C.</p>
+		<div class="encabezado"><span>Referencia</span><span>Copa</span><span>Botella</span></div>
+
+		<details data-item data-uva="mencia" data-zona="ribeira-sacra" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/tinto-algueria-360.webp" alt="Copa de tinto de montana" style="--tono:#9f8c5e">
+				<div><p class="nombre">Guímaro Finca Meixemán</p><p class="meta"><span class="uva">Mencía</span> · Ribeira Sacra · 2020</p></div>
+				<span class="copa">8,50</span>
+				<span class="botella">49</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">Viñedo en bancal sobre el Sil, con pendientes del 60 %. Se vendimia
+				en cesto porque no entra una máquina. Fruta roja, pizarra y mucha frescura.</p>
+				<div class="datos">
+					<div><b>Bodega</b><span>Pedro Rodríguez</span></div>
+					<div><b>Crianza</b><span>12 meses, roble usado</span></div>
+					<div><b>Grado</b><span>13 %</span></div>
+					<div><b>Marida con</b><span>Carnes rojas, quesos curados</span></div>
+				</div>
+			</div>
+		</details>
+
+		<details data-item data-uva="mencia" data-zona="bierzo" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/tinto-petalos-360.webp" alt="Copa de tinto joven" style="--tono:#1e191a">
+				<div><p class="nombre">Pétalos del Bierzo</p><p class="meta"><span class="uva">Mencía</span> · Bierzo · 2022</p></div>
+				<span class="copa">5,50</span>
+				<span class="botella">28</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">El que le damos a quien nos dice «ponme un tinto y no me compliques».
+				Nunca ha decepcionado a nadie.</p>
+				<div class="datos">
+					<div><b>Bodega</b><span>Descendientes de J. Palacios</span></div>
+					<div><b>Crianza</b><span>6 meses en barrica</span></div>
+					<div><b>Grado</b><span>14 %</span></div>
+					<div><b>Marida con</b><span>Todo</span></div>
+				</div>
+			</div>
+		</details>
+
+		<details data-item data-uva="tempranillo" data-zona="ribera" class="vino">
+			<summary>
+				<div><p class="nombre">Valbuena 5.º</p><p class="meta"><span class="uva">Tempranillo</span> · Ribera del Duero · 2018</p></div>
+				<span class="copa sin-copa">—</span>
+				<span class="botella">195</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">Sólo por botella. Si quiere abrirlo, avísenos con media hora para
+				decantarlo como se merece.</p>
+				<div class="datos">
+					<div><b>Bodega</b><span>Vega Sicilia</span></div>
+					<div><b>Crianza</b><span>5 años entre madera y botella</span></div>
+					<div><b>Grado</b><span>14,5 %</span></div>
+					<div><b>Marida con</b><span>Caza, asados</span></div>
+				</div>
+			</div>
+		</details>
+	</section>
+
+	<section class="seccion" data-filtrable>
+		<h2>Generosos y dulces</h2>
+		<div class="encabezado"><span>Referencia</span><span>Copa</span><span>Botella</span></div>
+
+		<details data-item data-uva="palomino" data-zona="jerez" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/blanco-albamar-360.webp" alt="Copa de fino palido" style="--tono:#4f493f">
+				<div><p class="nombre">Fino en rama, saca de primavera</p><p class="meta"><span class="uva">Palomino</span> · Jerez · s.a.</p></div>
+				<span class="copa">4,50</span>
+				<span class="botella">26</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">Sin filtrar y sin clarificar, tal como sale de la bota. Se bebe frío
+				y rápido: en un mes ya no es el mismo vino.</p>
+				<div class="datos">
+					<div><b>Crianza</b><span>Biológica bajo velo de flor</span></div>
+					<div><b>Grado</b><span>15 %</span></div>
+					<div><b>Marida con</b><span>Almendra, jamón, anchoa</span></div>
+					<div><b>Servicio</b><span>7 °C, copa de blanco</span></div>
+				</div>
+			</div>
+		</details>
+
+		<details data-item data-uva="px" data-zona="montilla" class="vino con-copa">
+			<summary>
+				<img class="copa-foto rev" data-amplia src="https://carta.adiantai.es/media/stock/dulce-px-360.webp" alt="Copa de PX ambarino" style="--tono:#3f250c">
+				<div><p class="nombre">Pedro Ximénez viejo</p><p class="meta"><span class="uva">PX</span> · Montilla-Moriles · s.a.</p></div>
+				<span class="copa">6</span>
+				<span class="botella">38</span>
+			</summary>
+			<div class="ficha">
+				<p class="nota">Denso hasta manchar la copa. Uva asoleada, más de veinte años de
+				solera. Un dedo basta.</p>
+				<div class="datos">
+					<div><b>Crianza</b><span>Solera de 20 años</span></div>
+					<div><b>Grado</b><span>17 %</span></div>
+					<div><b>Marida con</b><span>Postres, queso azul</span></div>
+					<div><b>Servicio</b><span>Copa pequeña, 13 °C</span></div>
+				</div>
+			</div>
+		</details>
+	</section>
+
+	<section class="picoteo">
+		<h2>Para acompañar</h2>
+		<div class="l"><span>Tabla de quesos gallegos</span><span>16 €</span></div>
+		<div class="l"><span>Jamón ibérico de bellota</span><span>19 €</span></div>
+		<div class="l"><span>Anchoa del Cantábrico, 4 lomos</span><span>12 €</span></div>
+		<div class="l"><span>Conserva del día con pan de cristal</span><span>11 €</span></div>
+		<div class="l"><span>Almendra marcona frita</span><span>4 €</span></div>
+	</section>
+
+	<footer class="cierre">
+		<b>Cepa Vella</b>
+		Descorche de botella propia: 15 €
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

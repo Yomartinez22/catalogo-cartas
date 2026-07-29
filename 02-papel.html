@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4efe2">
+<title>Casa Enriqueta · Taberna desde 1931</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 02 — PAPEL · arquetipo: taberna con historia, café, casa fundada en 19XX
+	   Ley: columna ÚNICA de prosa. El plato es un párrafo, no una tarjeta.
+	   Modo CLARO a propósito: rompe la idea de que una carta premium es oscura.
+	   Lección de Dishoom: filete, versalitas, pie de foto girado en el margen.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): papel: fundido puro, sin movimiento -- una lamina impresa no rebota */
+		--rev-dur:900ms;
+		--rev-desp:0px;
+		--rev-escala:1;
+		--rev-escalon:120ms;
+		--rev-satura:.9;
+		--papel: #f4efe2;
+		--papel-hondo: #ebe4d2;
+		--tinta: #22303c;
+		--tinta-media: #5a6570;
+		--sello: #a63a2b;
+		--filete: rgba(34, 48, 60, 0.22);
+
+		--serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+		--ancho: 480px;
+		--gutter: 26px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--papel);
+		color: var(--tinta);
+		font-family: var(--serif);
+		font-size: 17px;
+		line-height: 1.62;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta {
+		max-width: var(--ancho);
+		margin: 0 auto;
+		padding: 0 var(--gutter) 90px;
+		/* textura de papel: una trama finísima, no un ruido de plantilla */
+		background-image:
+			radial-gradient(rgba(34, 48, 60, 0.035) 1px, transparent 1px);
+		background-size: 4px 4px;
+	}
+
+	/* ---------- cabecera: sólo tipografía, sin foto ---------- */
+	.cabecera {
+		text-align: center;
+		padding: 62px 0 40px;
+		border-bottom: 3px double var(--filete);
+	}
+	.cabecera .fundada {
+		font-size: 0.7rem;
+		letter-spacing: 0.32em;
+		text-transform: uppercase;
+		color: var(--sello);
+		margin: 0 0 18px;
+	}
+	.cabecera h1 {
+		font-size: clamp(2.6rem, 2rem + 4vw, 3.4rem);
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: 0.01em;
+		margin: 0 0 16px;
+	}
+	.cabecera .lugar {
+		font-size: 0.78rem;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--tinta-media);
+		margin: 0;
+	}
+
+	/* ---------- prosa de apertura, justificada de verdad ---------- */
+	.entradilla {
+		padding: 34px 0 8px;
+		text-align: justify;
+		hyphens: auto;
+	}
+	.entradilla p { margin: 0 0 14px; }
+	.entradilla p:first-child::first-letter {
+		float: left;
+		font-size: 3.4em;
+		line-height: 0.82;
+		padding: 0.06em 0.1em 0 0;
+		color: var(--sello);
+	}
+
+	/* ---------- foto enmarcada con el pie GIRADO en el margen (Dishoom) ---------- */
+	.lamina {
+		display: grid;
+		grid-template-columns: 30px 1fr;
+		gap: 12px;
+		align-items: stretch;
+		margin: 34px 0 30px;
+	}
+	.lamina figcaption {
+		writing-mode: vertical-rl;
+		transform: rotate(180deg);
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		color: var(--tinta-media);
+		text-align: right;
+		align-self: end;
+	}
+	.lamina .marco {
+		border: 1px solid var(--filete);
+		padding: 7px;
+		background: #fff;
+	}
+	.lamina img {
+		width: 100%;
+		display: block;
+		/* virado a sepia: la foto se somete al papel en vez de competir con él */
+		--foto-filtro: grayscale(1) sepia(0.34) contrast(1.06) brightness(0.98);
+	}
+
+	/* ---------- secciones ---------- */
+	.seccion { margin-top: 46px; }
+	.seccion > h2 {
+		text-align: center;
+		font-size: 0.82rem;
+		font-weight: 400;
+		letter-spacing: 0.36em;
+		text-transform: uppercase;
+		margin: 0 0 4px;
+	}
+	.seccion > .filete-orn {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin: 0 0 26px;
+		color: var(--sello);
+	}
+	.seccion > .filete-orn::before,
+	.seccion > .filete-orn::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: var(--filete);
+	}
+	.seccion > .filete-orn i { font-style: normal; font-size: 0.7rem; }
+
+	/* ---------- el plato ES un párrafo ---------- */
+	.plato { margin: 0 0 22px; }
+	.plato .linea {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+	}
+	.plato .nombre {
+		font-size: 0.94rem;
+		font-variant: small-caps;
+		letter-spacing: 0.1em;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+	.plato .puntos {
+		flex: 1;
+		border-bottom: 1px dotted rgba(34, 48, 60, 0.35);
+		transform: translateY(-3px);
+	}
+	.plato .precio { font-size: 0.94rem; font-variant-numeric: tabular-nums; }
+	.plato .desc {
+		margin: 3px 0 0;
+		font-size: 0.94rem;
+		color: var(--tinta-media);
+		line-height: 1.5;
+	}
+
+	/* nota manuscrita del dueño: el detalle que ningún competidor tiene */
+	.nota-dueno {
+		margin: 30px 0;
+		padding: 18px 20px;
+		background: var(--papel-hondo);
+		border-left: 1px solid var(--sello);
+		font-size: 0.92rem;
+		font-style: italic;
+		color: var(--tinta-media);
+	}
+	.nota-dueno b { font-style: normal; color: var(--tinta); }
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		margin-top: 54px;
+		padding-top: 30px;
+		border-top: 3px double var(--filete);
+		text-align: center;
+		font-size: 0.88rem;
+		color: var(--tinta-media);
+	}
+	.cierre .nombre { font-size: 1.05rem; color: var(--tinta); margin-bottom: 6px; }
+	.cierre a {
+		display: inline-block;
+		margin-top: 22px;
+		padding: 13px 30px;
+		border: 1px solid var(--tinta);
+		color: var(--tinta);
+		text-decoration: none;
+		font-size: 0.78rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		transition: background 180ms ease, color 180ms ease;
+	}
+	.cierre a:hover, .cierre a:focus-visible { background: var(--tinta); color: var(--papel); }
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	.indice { text-align: center; margin: 30px 0 4px; font-size: 0.92rem; }
+	.indice a { color: var(--sello); text-decoration: none; font-variant: small-caps; letter-spacing: 0.12em; padding: 2px 3px; }
+	.indice a.activo { border-bottom: 1px solid var(--sello); }
+	.indice .leyenda { display: block; margin-top: 10px; font-size: 0.78rem; font-style: italic; color: var(--tinta-media); }
+	.mano { font-style: normal; color: var(--sello); margin-right: 7px; }
+	/* FIRMA (Dishoom): la foto se revela como en cubeta de laboratorio */
+	@media (prefers-reduced-motion: no-preference) {
+		.lamina img.rev.visto { animation: cubeta 1.5s ease-out; }
+		@keyframes cubeta { from { filter: grayscale(1) brightness(1.55) contrast(0.55); } }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="fundada">Fundada en 1931</p>
+		<h1>Casa<br>Enriqueta</h1>
+		<p class="lugar">Taberna · Pontevedra</p>
+	</header>
+
+	<div class="entradilla">
+		<p>Enriqueta Sixto abrió esta taberna con catorce mesas y una cocina de carbón el mismo
+		año en que se proclamó la República. Sus nietos siguen aquí, la cocina de carbón también,
+		y de las catorce mesas quedan once porque tres se rompieron y nunca se sustituyeron.</p>
+		<p>La carta cambia poco. Cambia cuando cambia el mercado, que es lo mismo que decir cuando
+		toca.</p>
+	</div>
+
+	<nav class="indice" data-nav aria-label="Índice">
+		<a href="#picar">Para picar</a> · <a href="#cuchara">De cuchara</a> · <a href="#mar">Del mar</a> · <a href="#dulces">Dulces</a>
+		<span class="leyenda">☞ señala lo que la casa recomienda</span>
+	</nav>
+
+	<figure class="lamina">
+		<figcaption>La pieza de la semana, en la barra</figcaption>
+		<div class="marco">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/jamon-iberico-560.webp" alt="Jamón cortado a cuchillo en la barra" style="--tono:#ac7478">
+		</div>
+	</figure>
+
+	<section class="seccion" id="picar">
+		<h2>Para picar</h2>
+		<p class="filete-orn"><i>❧</i></p>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre"><i class="mano" aria-hidden="true">☞</i>Tortilla de Enriqueta</span><span class="puntos"></span><span class="precio">4,80 €</span></p>
+			<p class="desc">Poco cuajada, como la hacía ella. Se acaba a las dos y media y no se hace otra.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Jamón a cuchillo</span><span class="puntos"></span><span class="precio">19 €</span></p>
+			<p class="desc">De bellota, cortado en la barra. La pieza empieza el lunes y termina cuando termina.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Zamburiñas a la plancha</span><span class="puntos"></span><span class="precio">14 €</span></p>
+			<p class="desc">Seis piezas con su concha, ajo y perejil. De la ría, cuando las hay.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Croquetas de cocido</span><span class="puntos"></span><span class="precio">9 €</span></p>
+			<p class="desc">Del cocido del domingo anterior. Es el motivo de que haya cocido los domingos.</p>
+		</article>
+	</section>
+
+	<p class="nota-dueno"><b>Una advertencia:</b> aquí no hay menú del día ni lo va a haber. Lo
+	intentamos en 1994 durante cuatro meses y fue un disgusto para todos.</p>
+
+	<section class="seccion" id="cuchara">
+		<h2>De cuchara</h2>
+		<p class="filete-orn"><i>❧</i></p>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Caldo gallego</span><span class="puntos"></span><span class="precio">7 €</span></p>
+			<p class="desc">Grelos, unto, patata y lacón. Se hace la víspera porque de un día para otro está mejor.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Callos con garbanzos</span><span class="puntos"></span><span class="precio">12 €</span></p>
+			<p class="desc">Sólo jueves. Si viene un martes preguntando por los callos, le diremos que vuelva el jueves.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Fabada de la casa</span><span class="puntos"></span><span class="precio">13 €</span></p>
+			<p class="desc">Faba asturiana, compango de Tineo. De octubre a marzo.</p>
+		</article>
+	</section>
+
+	<figure class="lamina">
+		<figcaption>Los quesos, del mismo pastor desde 1979</figcaption>
+		<div class="marco">
+			<img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/tabla-quesos-560.webp" alt="Tabla de quesos sobre el mármol de la barra" style="--tono:#a59480">
+		</div>
+	</figure>
+
+	<section class="seccion" id="mar">
+		<h2>Del mar</h2>
+		<p class="filete-orn"><i>❧</i></p>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre"><i class="mano" aria-hidden="true">☞</i>Pulpo á feira</span><span class="puntos"></span><span class="precio">17 €</span></p>
+			<p class="desc">Cocido en cobre, cortado con tijera, cachelo debajo. Pimentón dulce salvo que pida picante.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Merluza de pincho</span><span class="puntos"></span><span class="precio">21 €</span></p>
+			<p class="desc">A la plancha con refrito de ajo. De Celeiro, con su etiqueta, que se la enseñamos si quiere.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Bacalao a la brasa</span><span class="puntos"></span><span class="precio">18 €</span></p>
+			<p class="desc">Desalado en casa durante tres días, con cebolla confitada y pimiento del piquillo.</p>
+		</article>
+	</section>
+
+	<section class="seccion" id="dulces">
+		<h2>Dulces</h2>
+		<p class="filete-orn"><i>❧</i></p>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Leche frita</span><span class="puntos"></span><span class="precio">5,50 €</span></p>
+			<p class="desc">Con canela y azúcar quemado en el momento.</p>
+		</article>
+
+		<article class="plato">
+			<p class="linea"><span class="nombre">Tarta de Santiago</span><span class="puntos"></span><span class="precio">5 €</span></p>
+			<p class="desc">De la pastelería de la esquina, que la hace mejor que nosotros.</p>
+		</article>
+	</section>
+
+	<footer class="cierre">
+		<p class="nombre">Casa Enriqueta</p>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

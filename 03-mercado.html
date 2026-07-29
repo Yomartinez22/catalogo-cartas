@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101010">
+<title>Lonja 7 · Producto del día</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 03 — MERCADO · arquetipo: marisquería, producto de temporada
+	   Ley: ETIQUETAS de conserva superpuestas y desalineadas, no tarjetas alineadas.
+	   El alérgeno deja de ser una barra gris y pasa a ser un sello de producto.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): mercado: seco y rapido, como pegar una etiqueta */
+		--rev-dur:600ms;
+		--rev-desp:16px;
+		--rev-escala:1.05;
+		--rev-escalon:60ms;
+		--rev-satura:.7;
+		--negro: #101010;
+		--negro-alto: #191919;
+		--crema: #f2ebdd;
+		--naranja: #e4572e;
+		--alga: #7d8c6a;
+		--filete: rgba(242, 235, 221, 0.16);
+
+		--display: 'Haettenschweiler', 'Arial Narrow', 'Oswald', Impact, sans-serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 20px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--negro);
+		color: var(--crema);
+		font-family: var(--ui);
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding-bottom: 90px; overflow-x: hidden; }
+
+	/* ---------- cabecera: el rótulo de la lonja ---------- */
+	.cabecera {
+		padding: 54px var(--gutter) 34px;
+		border-bottom: 1px solid var(--filete);
+	}
+	.cabecera .sub {
+		font-size: 0.66rem;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--naranja);
+		margin: 0 0 14px;
+	}
+	.cabecera h1 {
+		font-family: var(--display);
+		font-size: clamp(3.4rem, 2.4rem + 9vw, 5.2rem);
+		line-height: 0.86;
+		letter-spacing: 0.01em;
+		text-transform: uppercase;
+		margin: 0 0 18px;
+	}
+	.cabecera .linea-fecha {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		font-size: 0.74rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: rgba(242, 235, 221, 0.55);
+		border-top: 1px solid var(--filete);
+		padding-top: 12px;
+	}
+
+	/* ---------- pizarra del día: etiquetas superpuestas ---------- */
+	.pizarra { padding: 40px var(--gutter) 20px; }
+	.pizarra > h2 {
+		font-family: var(--display);
+		font-size: 1.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		margin: 0 0 4px;
+	}
+	.pizarra > p.pie {
+		font-size: 0.82rem;
+		color: rgba(242, 235, 221, 0.55);
+		margin: 0 0 28px;
+	}
+
+	.pieza {
+		position: relative;
+		margin-bottom: 34px;
+	}
+	.pieza .foto {
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		border: 1px solid var(--filete);
+	}
+	.pieza .foto img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		--foto-filtro: contrast(1.08);
+	}
+	/* la etiqueta: pisa la foto, ligeramente girada, como pegada a mano */
+	.pieza .etiqueta {
+		position: relative;
+		margin: -34px 0 0 8px;
+		width: calc(100% - 40px);
+		background: var(--crema);
+		color: var(--negro);
+		padding: 14px 16px 15px;
+		box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
+		--rot: -1.1deg;
+		transform: rotate(var(--rot));
+	}
+	.pieza:nth-child(even) .etiqueta { --rot: 0.9deg; margin-left: 26px; }
+	.pieza .etiqueta::before,
+	.pieza .etiqueta::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--negro);
+		transform: translateY(-50%);
+	}
+	.pieza .etiqueta::before { left: 6px; }
+	.pieza .etiqueta::after { right: 6px; }
+
+	.pieza .etiqueta .nombre {
+		font-family: var(--display);
+		font-size: 1.5rem;
+		line-height: 1.05;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		margin: 0 0 6px;
+		padding: 0 12px;
+	}
+	.pieza .etiqueta .desc {
+		font-size: 0.84rem;
+		line-height: 1.45;
+		color: #3a3a3a;
+		margin: 0 0 10px;
+		padding: 0 12px;
+	}
+	.pieza .etiqueta .fila {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 0 12px;
+		border-top: 1px dashed rgba(16, 16, 16, 0.3);
+		padding-top: 10px;
+	}
+	.pieza .etiqueta .precio {
+		font-family: var(--display);
+		font-size: 1.35rem;
+		letter-spacing: 0.02em;
+	}
+	.pieza .etiqueta .unidad { font-size: 0.72rem; color: #5a5a5a; }
+
+	/* sellos de procedencia: los alérgenos y el origen como argumento, no como barra gris */
+	.sellos { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px 0; }
+	.sello {
+		font-size: 0.6rem;
+		font-weight: 700;
+		letter-spacing: 0.13em;
+		text-transform: uppercase;
+		padding: 4px 8px;
+		border: 1px solid currentColor;
+		border-radius: 2px;
+	}
+	.sello.origen { color: var(--naranja); }
+	.sello.temporada { color: #2f6b4f; }
+	.sello.alergeno { color: #6b6b6b; }
+
+	/* ---------- lista corta de fondo de carta ---------- */
+	.fondo {
+		margin-top: 22px;
+		padding: 38px var(--gutter) 10px;
+		border-top: 1px solid var(--filete);
+	}
+	.fondo h2 {
+		font-family: var(--display);
+		font-size: 1.6rem;
+		text-transform: uppercase;
+		margin: 0 0 20px;
+	}
+	.linea-plato {
+		display: flex;
+		align-items: baseline;
+		gap: 12px;
+		padding: 13px 0;
+		border-top: 1px solid rgba(242, 235, 221, 0.09);
+	}
+	.linea-plato:first-of-type { border-top: 0; }
+	.linea-plato .n { flex: 1; font-size: 0.98rem; }
+	.linea-plato .n small { display: block; font-size: 0.8rem; color: rgba(242, 235, 221, 0.5); }
+	.linea-plato .p {
+		font-family: var(--display);
+		font-size: 1.1rem;
+		color: var(--naranja);
+		white-space: nowrap;
+	}
+
+	.aviso {
+		margin: 34px var(--gutter) 0;
+		padding: 16px 18px;
+		background: var(--negro-alto);
+		border: 1px dashed var(--filete);
+		font-size: 0.84rem;
+		color: rgba(242, 235, 221, 0.7);
+	}
+	.aviso b { color: var(--crema); }
+
+	.cierre {
+		margin-top: 40px;
+		padding: 30px var(--gutter) 0;
+		border-top: 1px solid var(--filete);
+		font-size: 0.84rem;
+		color: rgba(242, 235, 221, 0.55);
+	}
+	.cierre b { display: block; color: var(--crema); font-size: 1rem; margin-bottom: 6px; }
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	.nav-carta { background: var(--negro); border-bottom: 1px solid var(--filete); }
+	.nav-carta a { color: rgba(242, 235, 221, 0.6); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--naranja); box-shadow: inset 0 -2px 0 var(--naranja); }
+	/* agotado: la promesa "si aparece tachado, ya voló", cumplida a la vista */
+	.pieza.agotada .foto img { --foto-filtro: grayscale(1) contrast(0.92); }
+	.pieza.agotada .etiqueta .nombre { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: #a03a1c; }
+	.vendido { position: absolute; top: -13px; right: 14px; transform: rotate(4deg); border: 2px solid #a03a1c; color: #a03a1c; background: var(--crema); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; padding: 4px 9px; }
+	/* FIRMA (Aponiente): la etiqueta se pega de un golpe; el sello, de un tampon */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .pieza[data-entra]:not(.visto) .etiqueta { opacity: 0; transform: rotate(calc(var(--rot) - 4deg)) scale(1.07) translateY(-10px); }
+		.pieza[data-entra] .etiqueta { transition: opacity 300ms ease-out, transform 340ms cubic-bezier(0.2, 1.4, 0.4, 1); }
+		html.js-rev .pieza[data-entra]:not(.visto) .vendido { opacity: 0; transform: rotate(4deg) scale(1.7); }
+		.vendido { transition: opacity 140ms ease-out 380ms, transform 190ms cubic-bezier(0.2, 1.6, 0.4, 1) 380ms; }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<p class="sub">Marisquería · Ribeira</p>
+		<h1>Lonja<br>Siete</h1>
+		<p class="linea-fecha"><span>Subasta de hoy</span><span>28 · 07</span></p>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#hoy">Lo de esta mañana</a>
+		<a href="#siempre">Siempre en carta</a>
+	</nav>
+
+	<section class="pizarra" id="hoy">
+		<h2>Lo que entró esta mañana</h2>
+		<p class="pie">Se acaba cuando se acaba. Si aparece tachado, ya voló.</p>
+
+		<article class="pieza" data-entra>
+			<div class="foto"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/pulpo-560.webp" alt="Pulpo recién cocido" style="--tono:#bbb198"></div>
+			<div class="etiqueta">
+				<p class="nombre">Pulpo de roca</p>
+				<p class="desc">Dos kilos y medio, cocido en cobre esta mañana. Se sirve entero o por raciones.</p>
+				<div class="sellos">
+					<span class="sello origen">Ría de Arousa</span>
+					<span class="sello temporada">Pieza del día</span>
+					<span class="sello alergeno">Moluscos</span>
+				</div>
+				<div class="fila">
+					<span class="precio">19 €</span>
+					<span class="unidad">ración · 26 € la pieza entera</span>
+				</div>
+			</div>
+		</article>
+
+		<article class="pieza" data-entra>
+			<div class="foto"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/carpaccio-gambon-560.webp" alt="Carpaccio de gambón" style="--tono:#a68d60"></div>
+			<div class="etiqueta">
+				<p class="nombre">Gambón de Huelva</p>
+				<p class="desc">En crudo, aliñado con su propio jugo, aceite de Jaén y flor de sal. Doce piezas.</p>
+				<div class="sellos">
+					<span class="sello origen">Golfo de Cádiz</span>
+					<span class="sello alergeno">Crustáceos</span>
+				</div>
+				<div class="fila">
+					<span class="precio">24 €</span>
+					<span class="unidad">12 piezas</span>
+				</div>
+			</div>
+		</article>
+
+		<article class="pieza agotada" data-entra>
+			<div class="foto"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/eby-panko-560.webp" alt="Langostinos en panko" style="--tono:#a55a20"></div>
+			<div class="etiqueta">
+				<span class="vendido">Vendido · 13:40</span>
+				<p class="nombre">Langostino en panko</p>
+				<p class="desc">Rebozado en panko japonés y frito al momento. Con mayonesa de kimchi de la casa.</p>
+				<div class="sellos">
+					<span class="sello origen">Sanlúcar</span>
+					<span class="sello alergeno">Crustáceos · Gluten · Huevo</span>
+				</div>
+				<div class="fila">
+					<span class="precio">16 €</span>
+					<span class="unidad">8 piezas</span>
+				</div>
+			</div>
+		</article>
+
+		<article class="pieza" data-entra>
+			<div class="foto"><img class="rev" data-amplia src="https://carta.adiantai.es/media/stock/tosta-tartar-atun-560.webp" alt="Tartar de atún sobre tosta" style="--tono:#b09559"></div>
+			<div class="etiqueta">
+				<p class="nombre">Atún rojo de almadraba</p>
+				<p class="desc">Tartar del lomo, sobre pan de masa madre tostado, con aguacate y sésamo negro.</p>
+				<div class="sellos">
+					<span class="sello origen">Barbate</span>
+					<span class="sello temporada">Última semana</span>
+					<span class="sello alergeno">Pescado · Gluten · Sésamo</span>
+				</div>
+				<div class="fila">
+					<span class="precio">21 €</span>
+					<span class="unidad">2 tostas</span>
+				</div>
+			</div>
+		</article>
+	</section>
+
+	<p class="aviso"><b>El precio del marisco es el de la lonja.</b> Lo que ve aquí se actualizó
+	hoy a las 07:40, cuando cerró la subasta. Si mañana baja, baja.</p>
+
+	<section class="fondo" id="siempre">
+		<h2>Siempre en carta</h2>
+
+		<div class="linea-plato">
+			<span class="n">Empanada de zamburiñas<small>Masa de maíz, hecha en casa cada mañana</small></span>
+			<span class="p">6 €</span>
+		</div>
+		<div class="linea-plato">
+			<span class="n">Croquetas de marisco<small>Con el caldo de las cabezas del día anterior</small></span>
+			<span class="p">9 €</span>
+		</div>
+		<div class="linea-plato">
+			<span class="n">Arroz caldoso de bogavante<small>Mínimo dos personas, 40 minutos de espera</small></span>
+			<span class="p">28 €</span>
+		</div>
+		<div class="linea-plato">
+			<span class="n">Ensalada de tomate y ventresca<small>Tomate de Barbanza y ventresca en conserva propia</small></span>
+			<span class="p">13 €</span>
+		</div>
+		<div class="linea-plato">
+			<span class="n">Filloa rellena de crema<small>El único postre. No hay más</small></span>
+			<span class="p">5 €</span>
+		</div>
+	</section>
+
+	<footer class="cierre">
+		<b>Lonja 7</b>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

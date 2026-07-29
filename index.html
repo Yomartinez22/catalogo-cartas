@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo de 15 cartas digitales · Adianta</title>
+<style>
+	:root {
+		--paper: #0d0d10;
+		--surface: #16161b;
+		--surface-2: #1e1e25;
+		--ink: rgba(255, 255, 255, 0.93);
+		--muted: rgba(255, 255, 255, 0.58);
+		--faint: rgba(255, 255, 255, 0.38);
+		--line: rgba(255, 255, 255, 0.12);
+		--accent: #8b7bff;
+		--warn: #fbbf24;
+		--sans: 'Inter', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+		--serif: 'Bricolage Grotesque', Georgia, 'Times New Roman', serif;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+	}
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px 120px; }
+
+	header.top { padding: 84px 0 48px; border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+	.kicker {
+		font-family: var(--mono);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin: 0 0 20px;
+	}
+	h1 {
+		font-family: var(--serif);
+		font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4rem);
+		line-height: 1.02;
+		letter-spacing: -0.025em;
+		margin: 0 0 22px;
+		max-width: 18ch;
+	}
+	.lede { font-size: 1.12rem; color: var(--muted); max-width: 64ch; margin: 0; }
+	.lede strong { color: var(--ink); font-weight: 600; }
+
+	.como {
+		margin-top: 30px;
+		padding: 16px 20px;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: 10px;
+		font-size: 0.92rem;
+		color: var(--muted);
+		max-width: 64ch;
+	}
+	.como b { color: var(--ink); }
+
+	.rejilla {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+		gap: 26px;
+	}
+
+	.ficha {
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: 12px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+		transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), border-color 220ms ease;
+	}
+	.ficha:hover, .ficha:focus-visible {
+		transform: translateY(-4px);
+		border-color: rgba(139, 123, 255, 0.5);
+		outline: none;
+	}
+	.ficha .lienzo {
+		background: #000;
+		aspect-ratio: 390 / 500;
+		overflow: hidden;
+	}
+	.ficha .lienzo img {
+		width: 100%;
+		display: block;
+		object-fit: cover;
+		object-position: top center;
+		height: 100%;
+	}
+	.ficha .cuerpo { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+	.ficha .num {
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.14em;
+		color: var(--faint);
+		margin: 0 0 6px;
+	}
+	.ficha h2 {
+		font-family: var(--serif);
+		font-size: 1.42rem;
+		letter-spacing: -0.02em;
+		margin: 0 0 4px;
+	}
+	.ficha .para {
+		font-family: var(--mono);
+		font-size: 10px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin: 0 0 12px;
+	}
+	.ficha .ley { font-size: 0.9rem; color: var(--muted); margin: 0 0 14px; }
+	.ficha .venta {
+		margin: auto 0 0;
+		padding-top: 14px;
+		border-top: 1px solid var(--line);
+		font-size: 0.88rem;
+	}
+	.ficha .venta b { color: var(--accent); font-weight: 600; }
+	.ficha .sinfoto {
+		display: inline-block;
+		margin-top: 10px;
+		font-family: var(--mono);
+		font-size: 10px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--warn);
+		border: 1px solid rgba(251, 191, 36, 0.4);
+		padding: 2px 7px;
+		border-radius: 3px;
+	}
+
+	h2.seccion {
+		font-family: var(--serif);
+		font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.2rem);
+		letter-spacing: -0.02em;
+		margin: 90px 0 10px;
+	}
+	h2.seccion + p { color: var(--muted); max-width: 66ch; margin: 0 0 30px; }
+
+	.notas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+	.nota {
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: 10px;
+		padding: 22px 24px;
+	}
+	.nota.pendiente { background: var(--surface-2); }
+	.nota.pendiente h3::before {
+		content: '';
+		display: inline-block;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--warn);
+		margin-right: 9px;
+		vertical-align: 0.12em;
+	}
+	.nota h3 { font-size: 1.05rem; margin: 0 0 10px; }
+	.nota p { color: var(--muted); font-size: 0.93rem; margin: 0; }
+	.nota p + p { margin-top: 9px; }
+
+	footer {
+		margin-top: 80px;
+		padding-top: 26px;
+		border-top: 1px solid var(--line);
+		color: var(--faint);
+		font-size: 0.85rem;
+	}
+	footer a { color: var(--accent); }
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+	<p class="kicker">Adianta · app-carta · 28 julio 2026</p>
+	<h1>Catálogo de cartas digitales</h1>
+	<p class="lede">Quince registros visuales, cada uno un <strong>mundo completo</strong> (paleta,
+	pareja tipográfica, ley de composición y tipo de fotografía) atado a un <strong>arquetipo de
+	restaurante</strong>. No son quince temas de color sobre el mismo diseño: cada uno se compone
+	de forma distinta, y cada uno roba su firma al mejor del mundo de su arquetipo.</p>
+	<p class="como"><b>Cómo se enseña:</b> abra uno en el móvil y páseselo al dueño. Todos son un
+	solo fichero HTML, funcionan sin conexión al panel y están medidos a 390 y 360 px. Las referencias
+	de las que salen están en <a href="../references/cartas-2026/TABLERO.html">el tablero</a>.</p>
+</header>
+
+<div class="rejilla">
+
+	<a class="ficha" href="01-brasa.html">
+		<div class="lienzo"><img src="_miniaturas/01-brasa-1.png" alt="Portada del registro Brasa"></div>
+		<div class="cuerpo">
+			<p class="num">01 · BRASA</p>
+			<h2>Casa de fuego</h2>
+			<p class="para">Asador · parrilla · casa de comidas</p>
+			<p class="ley">Prólogo de sólo texto, pieza del día a sangre (ahora en vídeo) y lista de una
+			columna. Nada flota sobre la comida.</p>
+			<p class="venta"><b>Vende:</b> el asador lleva 40 años vendiendo fuego y su carta es un PDF.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="02-papel.html">
+		<div class="lienzo"><img src="_miniaturas/02-papel-1.png" alt="Portada del registro Papel"></div>
+		<div class="cuerpo">
+			<p class="num">02 · PAPEL</p>
+			<h2>Editorial de época</h2>
+			<p class="para">Taberna con historia · café · casa fundada en 19XX</p>
+			<p class="ley">Modo claro, texto justificado con capitular, foto virada dentro de marco y
+			el pie girado en el margen. El plato es un párrafo, no una tarjeta.</p>
+			<p class="venta"><b>Vende:</b> al que tiene fotos del abuelo en la pared y no sabe usarlas.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="03-mercado.html">
+		<div class="lienzo"><img src="_miniaturas/03-mercado-1.png" alt="Portada del registro Mercado"></div>
+		<div class="cuerpo">
+			<p class="num">03 · MERCADO</p>
+			<h2>Etiqueta y producto</h2>
+			<p class="para">Marisquería · producto de temporada · lonja</p>
+			<p class="ley">Etiquetas de conserva pegadas sobre la foto, giradas y desalineadas. El
+			alérgeno deja de ser una barra gris y pasa a ser un sello de origen.</p>
+			<p class="venta"><b>Vende:</b> al que compra bien y no sabe contarlo.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="04-galeria.html">
+		<div class="lienzo"><img src="_miniaturas/04-galeria-2.png" alt="Un pase del registro Galería"></div>
+		<div class="cuerpo">
+			<p class="num">04 · GALERÍA</p>
+			<h2>Un pase, una pantalla</h2>
+			<p class="para">Alta cocina · menú degustación · estrella</p>
+			<p class="ley">Scroll-snap vertical: cada pase ocupa la pantalla entera. Cero acento de
+			marca (el color lo pone el plato) y el precio aparece una sola vez, al final.</p>
+			<p class="venta"><b>Vende:</b> en un degustación de 120 €, una rejilla de tarjetas abarata.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="05-suizo.html">
+		<div class="lienzo"><img src="_miniaturas/05-suizo-1.png" alt="Portada del registro Suizo"></div>
+		<div class="cuerpo">
+			<p class="num">05 · SUIZO</p>
+			<h2>Retícula y precio</h2>
+			<p class="para">Bistró moderno · cocina de autor urbana · brunch</p>
+			<p class="ley">Blanco puro, retícula visible, numeración 1.1 / 1.2 y precios alineados con
+			puntos guía. La foto va <em>dentro</em> de la retícula, en columna fija y todas del mismo
+			tamaño: el suizo no prohíbe la fotografía, prohíbe el desorden.</p>
+			<p class="venta"><b>Vende:</b> al que quiere que su carta parezca una revista, no una app.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="06-rotulo.html">
+		<div class="lienzo"><img src="_miniaturas/06-rotulo-1.png" alt="Portada del registro Rótulo"></div>
+		<div class="cuerpo">
+			<p class="num">06 · RÓTULO</p>
+			<h2>Recorte y color plano</h2>
+			<p class="para">Bocatería · hamburguesería · taquería · pizzería</p>
+			<p class="ley">Fondo de color distinto por sección, display perfilada, borde ondulado y una
+			tira de reclamo que corre. Ruidoso a propósito, legible como un cartel. El restaurante
+			inventado es una bocatería porque el banco no tiene hamburguesa: antes que fingirla,
+			se cambia el negocio.</p>
+			<p class="venta"><b>Vende:</b> identidad que el dueño puede llevarse a Instagram tal cual.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="07-barro.html">
+		<div class="lienzo"><img src="_miniaturas/07-barro-1.png" alt="Portada del registro Barro"></div>
+		<div class="cuerpo">
+			<p class="num">07 · BARRO</p>
+			<h2>Textura y capítulo</h2>
+			<p class="para">Japonés · nikkei · sushi · cocina de autor</p>
+			<p class="ley">Fondo arena, grotesca en minúscula, capítulos numerados con su nombre en
+			japonés y una foto vertical centrada por capítulo. Muchísimo aire.</p>
+			<p class="venta"><b>Vende:</b> el japonés bueno compite con Deliveroo por foto fea.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="08-bodega.html">
+		<div class="lienzo"><img src="_miniaturas/08-bodega-1.png" alt="Portada del registro Bodega"></div>
+		<div class="cuerpo">
+			<p class="num">08 · BODEGA</p>
+			<h2>Ficha de botella</h2>
+			<p class="para">Vinoteca · bar de vinos · carta de bodega</p>
+			<p class="ley">El único con estructura de datos propia: uva, zona, añada y dos precios
+			(copa y botella). Filtros por uva y por zona. Al tocar, la ficha que contaría el camarero.</p>
+			<p class="venta"><b>Vende:</b> ningún competidor QR sabe hacer una carta de vinos.</p>
+			<span class="sinfoto">Foto solo por copa</span>
+		</div>
+	</a>
+
+	<a class="ficha" href="09-cal.html">
+		<div class="lienzo"><img src="_miniaturas/09-cal-1.png" alt="Portada del registro Cal"></div>
+		<div class="cuerpo">
+			<p class="num">09 · CAL</p>
+			<h2>Luz de mediodía</h2>
+			<p class="para">Chiringuito · arrocería · terraza · mediterráneo</p>
+			<p class="ley">Cal, azul tinta y terracota. Cuerpo a 16 px y contraste de 12:1: ningún gris
+			claro sobre blanco, porque al sol desaparece. Tarjeta ancha y sombra suave.</p>
+			<p class="venta"><b>Vende:</b> argumento técnico, se demuestra saliendo a la calle.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="10-neon.html">
+		<div class="lienzo"><img src="_miniaturas/10-neon-1.png" alt="Portada del registro Neón"></div>
+		<div class="cuerpo">
+			<p class="num">10 · NEÓN</p>
+			<h2>Penumbra legible</h2>
+			<p class="para">Coctelería · gastrobar nocturno · after</p>
+			<p class="ley">Sin blanco puro (a brillo bajo deslumbra): la tinta tope es #d8d8e2. Foto en
+			los de la casa, con el brillo bajado para no quemar la pantalla en una barra a oscuras;
+			los clásicos van por ingredientes y medidor de fuerza.</p>
+			<p class="venta"><b>Vende:</b> donde más se mira el móvil es donde peor se ve una carta blanca.</p>
+			<span class="sinfoto">Foto solo en los de la casa</span>
+		</div>
+	</a>
+
+	<a class="ficha" href="11-trattoria.html">
+		<div class="lienzo"><img src="_miniaturas/11-trattoria-1.png" alt="Portada del registro Trattoria"></div>
+		<div class="cuerpo">
+			<p class="num">11 · TRATTORIA</p>
+			<h2>La hoja del día</h2>
+			<p class="para">Italiano · trattoria · osteria · pizzería</p>
+			<p class="ley">Serif italiana (Bodoni) y la hoja del día sujeta con un clip, escrita cada
+			mañana y fechada. Los nombres de plato se escriben solos, de izquierda a derecha.</p>
+			<p class="venta"><b>Vende:</b> la escasez con encanto («cuando se tacha, se acabó»), robada
+			a Osteria Francescana.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="12-pizarra.html">
+		<div class="lienzo"><img src="_miniaturas/12-pizarra-1.png" alt="Portada del registro Pizarra"></div>
+		<div class="cuerpo">
+			<p class="num">12 · PIZARRA</p>
+			<h2>Tiza y polaroid</h2>
+			<p class="para">Bar de tapas · barra de pintxos · sidrería</p>
+			<p class="ley">Todo vive en una pizarra: la tiza escribe los titulares, los precios van en tiza
+			amarilla y los pintxos estrella llevan su polaroid pegada con celo.</p>
+			<p class="venta"><b>Vende:</b> el precio del vermú tachado y corregido a mano, el anclaje más
+			viejo y más honesto que existe. Referencia: las barras de San Sebastián.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="13-especia.html">
+		<div class="lienzo"><img src="_miniaturas/13-especia-1.png" alt="Portada del registro Especia"></div>
+		<div class="cuerpo">
+			<p class="num">13 · ESPECIA</p>
+			<h2>El dial de picante</h2>
+			<p class="para">Indio · nepalí · pakistaní</p>
+			<p class="ley">Paleta de especiero (cúrcuma, chili, cardamomo), cenefa rangoli que se dibuja, y
+			el dial «¿cuánto picante?» que filtra la carta de verdad. El thali como bundle.</p>
+			<p class="venta"><b>Vende:</b> quita el miedo nº1 del cliente español al indio. Elegir sin
+			miedo es pedir más. Referencia: Gaggan.</p>
+			<span class="sinfoto">Sin foto hasta la sesión del cliente</span>
+		</div>
+	</a>
+
+	<a class="ficha" href="14-dragon.html">
+		<div class="lienzo"><img src="_miniaturas/14-dragon-1.png" alt="Portada del registro Dragón"></div>
+		<div class="cuerpo">
+			<p class="num">14 · DRAGÓN</p>
+			<h2>Pida por número</h2>
+			<p class="para">Chino · cantonés · dim sum</p>
+			<p class="ley">Laca oscura, oro y jade (la estética Hakkasan) sobre el ritual más español que
+			hay: pedir por número. El número rueda al entrar y el sello rojo 招牌 se estampa.</p>
+			<p class="venta"><b>Vende:</b> «el sello marca lo que pide nuestra propia familia»: no hay
+			prueba social más honesta en un chino.</p>
+		</div>
+	</a>
+
+	<a class="ficha" href="15-huerta.html">
+		<div class="lienzo"><img src="_miniaturas/15-huerta-1.png" alt="Portada del registro Huerta"></div>
+		<div class="cuerpo">
+			<p class="num">15 · HUERTA</p>
+			<h2>Cosechado hoy</h2>
+			<p class="para">Vegetariano · healthy · cocina de huerta</p>
+			<p class="ley">Salvia y tierra sobre crema verdosa; cada plato lleva su procedencia y su hora
+			de cosecha. Un tallo crece por el margen de cada sección y en su nudo brota una hoja.</p>
+			<p class="venta"><b>Vende:</b> «cosechado hoy a las 7:30» vende más que cualquier adjetivo.
+			Referencias: Eleven Madison Park y Azurmendi.</p>
+		</div>
+	</a>
+
+</div>
+
+<h2 class="seccion">La capa que separa premium de plantilla</h2>
+<p>Tener buenas fotos no basta: si no se presentan bien, no sirven de nada. Estos tres detalles
+son invisibles hasta que faltan, y son lo que un dueño percibe como «esto está bien hecho» sin
+saber señalar por qué. Viven en <code>_presentacion.css</code> y <code>_presentacion.js</code>,
+compartidos por los diez.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>El hueco ya tiene el color del plato</h3>
+		<p>Cada foto lleva de fondo <b>su propio color medio</b>, calculado del fichero real (el
+		jamón entra desde un rosa <code>#ac7478</code>, la burrata desde un marrón oscuro).</p>
+		<p>Mientras los píxeles viajan no hay un rectángulo blanco ni un salto de layout: hay ya el
+		color de lo que va a llegar. El destello blanco es el delator número uno de web barata.</p>
+	</div>
+	<div class="nota">
+		<h3>Entra al mirarla, no al cargar</h3>
+		<p>La foto sube, se asienta desde una escala mayor y <b>se enciende de desaturada a color</b>,
+		imitando un revelado. En cascada con sus hermanas, nunca todas a la vez.</p>
+		<p>Y con carácter propio: BRASA es lento y pesado, RÓTULO rebota, SUIZO es corto y nítido
+		porque la retícula no dramatiza, GALERÍA tarda 1,4 s porque es cine.</p>
+	</div>
+	<div class="nota">
+		<h3>Responde al dedo</h3>
+		<p>Lo tocable se hunde un 3,5 % al pulsar. Lo que no es tocable, no. Un elemento que parece
+		pulsable y no responde se lee como roto; uno que responde sin serlo es una promesa falsa.</p>
+		<p>Sin JavaScript o con <code>prefers-reduced-motion</code>, las fotos se ven igual: la
+		animación es un adorno, ver la comida no.</p>
+	</div>
+</div>
+
+<h2 class="seccion">La densidad fotográfica es parte del registro</h2>
+<p>No todos los restaurantes quieren la carta llena de fotos, y no todos los registros la
+aguantan. Cuántas fotos lleva un registro <b>no es una carencia, es una decisión de diseño</b> —
+y de paso resuelve al cliente que no tiene fotos o no las quiere.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>Foto en todo</h3>
+		<p><b>Brasa · Suizo · Rótulo · Cal · Galería.</b> Cada plato se ve. Galería lleva el extremo:
+		una foto ocupa la pantalla entera y no hay nada más en ella.</p>
+	</div>
+	<div class="nota">
+		<h3>Foto donde decide la compra</h3>
+		<p><b>Mercado · Bodega · Neón.</b> Las piezas del día, lo que va por copa, los cócteles de la
+		casa. El fondo de carta va en texto: nadie pide una tabla de quesos por la foto.</p>
+	</div>
+	<div class="nota">
+		<h3>Foto como lámina, no como catálogo</h3>
+		<p><b>Papel · Barro.</b> Dos o tres imágenes grandes que respiran, no una miniatura por línea.
+		Es la lección de Dishoom y Sakazuki: ahí la foto puntúa el texto, no lo sustituye.</p>
+		<p>Son además los dos registros que puede llevarse un restaurante con pocas fotos buenas.</p>
+	</div>
+</div>
+
+<h2 class="seccion">El plato en movimiento: vídeo con disciplina</h2>
+<p>La carta puede llevar vídeo (el chocolate cayendo, la sal sobre el chuletón), pero con la
+misma regla que todo lo demás: espectáculo sí, tómbola no, y <b>fidelidad siempre</b>.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>Uno por pantalla, y degrada</h3>
+		<p>Vídeo <b>solo en el héroe</b>: la pieza del día de Brasa y un pase de Galería ya lo llevan
+		(movimiento real sobre la foto real, 300-400 KB). Siempre <code>muted</code>, con la foto de
+		poster, se reproduce al entrar en pantalla y se pausa al salir.</p>
+		<p>Con ahorro de datos o motion reducido no hay autoplay: queda el poster y decide el
+		comensal. Sin vídeo, la carta es exactamente la de antes.</p>
+	</div>
+	<div class="nota">
+		<h3>Generación IA: catálogo cerrado de gestos</h3>
+		<p><code>ops/genera_video_plato.py</code> (Veo, la misma clave que las fotos): parte
+		<b>siempre de la foto real aprobada</b> y solo admite escenas de un catálogo cerrado —
+		vapor, sal, queso rallado, chocolate, aceite, brasa de fondo, burbujas, giro lento.</p>
+		<p>Sin prompt libre, y la regla la firma el restaurante: solo se genera una escena que ese
+		plato <em>recibe de verdad</em>. Un chorro de chocolate que la casa no sirve es re-emplatar
+		en movimiento. Coste: un héroe de 6 s, ~1-2,5 $; una carta con 4-6 vídeos, menos de 15 $.</p>
+	</div>
+	<div class="nota pendiente">
+		<h3>Vinculada al panel: el dato manda</h3>
+		<p>Abre Brasa servida por HTTP: el entrecot marca <b>31 €</b> y el tartar sale <b>tachado con
+		«agotado hoy»</b> — nada de eso está en el HTML. Sale de <code>estado-demo.json</code>, que
+		simula lo que el panel escribe; cámbialo y recarga.</p>
+		<p>En producción ese JSON es <b>Postgres editado desde panel.adiantai.es</b> — precios,
+		disponibilidad y platos nuevos — con la maquinaria que ya sirve a Los Abetos: rebuild por
+		hook + parche de disponibilidad en runtime (<code>disponibilidad.ts</code>). El diseño es la
+		piel; el dato manda desde el panel. Pendiente para producto: portar cada registro como TEMA
+		de app-carta elegible en la ficha del cliente, y la columna <code>platos.video_url</code>
+		(gate humano de SQL).</p>
+	</div>
+</div>
+
+<h2 class="seccion">La firma de movimiento: robada al mejor del mundo de cada arquetipo</h2>
+<p>Una sola firma por registro — la misma disciplina que «un héroe por pantalla»: diez efectos en
+la misma carta es una feria, uno memorable es una marca. Solo propiedades de compositor, y todo
+degrada: sin JavaScript o con <code>prefers-reduced-motion</code>, la carta se ve en su estado
+final.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>Fuego, mar y actos</h3>
+		<p><b>Brasa ← Etxebarri</b> (nº2 del mundo, todo pasa por fuego): chispas que suben de la
+		brasa en la portada, y la pieza del día con un travelling atado al scroll — el dedo es la
+		cámara.</p>
+		<p><b>Mercado ← Aponiente</b> (el chef del mar): la etiqueta se <em>pega</em> de un golpe
+		seco al entrar, y el sello VENDIDO cae como un tampón de goma.</p>
+		<p><b>Galería ← Alchemist</b> (la cena son actos): cada pase entra con travelling y el
+		texto sube por capas, como títulos de película.</p>
+	</div>
+	<div class="nota">
+		<h3>Tinta, shoji y vino</h3>
+		<p><b>Papel ← Dishoom</b>: la lámina se revela <em>como en cubeta de laboratorio</em> —
+		entra lavada y quemada y asienta en su virado sepia.</p>
+		<p><b>Barro ← el «ma» japonés</b>: la lámina se abre como un shoji, desde el centro hacia
+		los lados, y el kanji respira al llegar.</p>
+		<p><b>Bodega ← El Celler de Can Roca</b>: la miniatura de la copa <em>se llena</em> de
+		abajo arriba, y al filtrar los supervivientes re-entran en cascada.</p>
+	</div>
+	<div class="nota">
+		<h3>Sol, neón y juego</h3>
+		<p><b>Cal ← Casa Jondal</b> (el chiringuito hecho alta cocina): un barrido de sol cruza
+		cada tarjeta una vez, como el reflejo del mediodía en un mantel.</p>
+		<p><b>Neón ← Paradiso</b> (nº1 de los 50 Best Bars): el letrero se enciende con el
+		parpadeo irregular de un neón real, una sola vez.</p>
+		<p><b>Rótulo ← Den</b> (alta cocina que juega): las chapas caen como pegatinas y el precio
+		del combo se estampa con rebote.</p>
+		<p><b>Suizo ← la contención de Noma</b>: los puntos guía se <em>dibujan</em> del plato
+		hacia el precio. La retícula no dramatiza; demuestra precisión.</p>
+	</div>
+</div>
+
+<h2 class="seccion">El pase de venta: una palanca por registro</h2>
+<p>La gente compra por lo que ve, así que cada palanca psicológica es <b>visible</b>, no un truco
+de copy. Y ninguna es falsa: escasez solo si se cumple, prueba social solo si es plausible. Un
+contador inventado de «3 personas mirando esto» es el mismo pecado que la hamburguesa falsa.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>Anclaje y prueba social</h3>
+		<p><b>Brasa:</b> el tomahawk de 68 € abre la carta y ancla — al lado, el entrecot de 29 €
+		parece razonable. Y ahora lleva su maridaje (cross-sell que sube el ticket) y el badge
+		«la que más sale».</p>
+		<p><b>Galería:</b> el precio aparece al final, después de nueve pantallas de valor. Primero
+		se desea, luego se paga.</p>
+		<p><b>Suizo:</b> el precio cerrado del mediodía va en la propia nav («Mediodía 19,50»): es
+		el ancla que su cliente eficiente está buscando.</p>
+	</div>
+	<div class="nota">
+		<h3>Escasez honesta y bundle</h3>
+		<p><b>Mercado:</b> la carta prometía «si aparece tachado, ya voló» — ahora hay una pieza
+		vendida de verdad: sello «Vendido · 13:40», foto en gris, nombre tachado. Ver que algo se
+		agota hace real la urgencia de lo que queda.</p>
+		<p><b>Rótulo:</b> «El menú Bruto» a precio cerrado con el ahorro visible («suelto saldría
+		hasta en 19,50 €»): sube el ticket sin que nadie sienta que gasta más.</p>
+		<p><b>Papel:</b> la manícula ☞ señala lo que la casa recomienda — la recomendación vende
+		más que cualquier badge.</p>
+	</div>
+	<div class="nota">
+		<h3>Elegir sin pensar</h3>
+		<p><b>Bodega:</b> elegir entre 214 botellas no es libertad, es parálisis. Los filtros por
+		uva y zona <b>funcionan de verdad</b> (y se combinan), y «la copa de esta semana» da el
+		punto de entrada a quien no sabe por dónde empezar.</p>
+		<p><b>Neón:</b> de noche no se elige por nombre, se elige por ganas: «¿Qué le apetece?» —
+		cítrico, amargo, salino… — filtra la carta. «La del Encargado» lleva todos los gustos: se
+		adapta, así que siempre queda.</p>
+		<p><b>Cal:</b> con sol y hambre, menos es más: tres saltos de nav y tiempos de espera a la
+		vista, que es lo que baja la ansiedad del que pide arroz.</p>
+	</div>
+</div>
+
+<h2 class="seccion">Consultar sin aprender</h2>
+<p>Interactiva y sencilla: tres mecanismos comunes (<code>_consulta.css/js</code>), cero curva de
+aprendizaje, y todo degrada bien — sin JavaScript la carta se lee entera igual.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>Saber dónde estás</h3>
+		<p>Nav de secciones pegajosa re-tintada por registro (chips en Cal, libro en Papel, puntos
+		de pase en Galería). Salto suave y sección activa marcada mientras bajas.</p>
+	</div>
+	<div class="nota">
+		<h3>La lupa</h3>
+		<p>Toca cualquier foto y la ves a pantalla completa, sobre su propio tono y en la variante
+		grande. Si compra por lo que ve, <b>que lo vea grande</b>. Se cierra tocando o con Esc.</p>
+	</div>
+	<div class="nota">
+		<h3>Filtros que filtran</h3>
+		<p>No son decoración: en Bodega uva y zona se combinan en Y; en Neón el estado de ánimo
+		enseña solo lo que encaja y esconde secciones enteras si nada casa.</p>
+	</div>
+</div>
+
+<h2 class="seccion">Lo verificado</h2>
+<p>No es «no había errores de consola»: son medidas reales sobre el render.</p>
+<div class="notas">
+	<div class="nota">
+		<h3>Cero desbordamiento a 360</h3>
+		<p>Los diez medidos con <code>scrollWidth − innerWidth</code> en móvil pequeño. Resultado: 0 px
+		en los diez.</p>
+		<p>El rótulo de <b>Bruto</b> sí se cortaba y el <code>overflow-x: hidden</code> lo tapaba;
+		se caza midiendo el ancho del propio <code>h1</code>, no el del documento.</p>
+	</div>
+	<div class="nota">
+		<h3>Nada pelea por el pulgar</h3>
+		<p>La carta actual tiene cuatro cosas flotando a la vez. Aquí, ninguna: quien escanea el QR
+		<b>ya está sentado</b> — reservar sobra (decisión Yago 2026-07-28), y la nav pegajosa de
+		secciones es parte del flujo, no un estorbo.</p>
+	</div>
+	<div class="nota pendiente">
+		<h3>Fotografía: ahora es parte del servicio</h3>
+		<p>Decisión de 2026-07-28: <b>no se vende una carta donde el comensal no vea el producto</b>.
+		Las fotos las manda el restaurante y se llevan a calidad de estudio con
+		<code>ops/mejora_foto.py</code> (Gemini). La regla dura: <b>reiluminar, nunca re-emplatar</b>
+		— si lo que llega a la mesa no es la foto, la reclamación se la come el restaurante.</p>
+		<p>En estos prototipos las fotos salen del banco de stock que ya sirve producción, y por eso
+		siguen faltando <b>local, personas y postres</b>. Se buscó relleno en bancos de licencia
+		libre (Openverse/CC0) y se <b>descartó</b>: son instantáneas amateur, y varias traían logos
+		de cadenas — un problema de marca peor que no tener foto.</p>
+		<p>Donde no hay foto honesta, el prototipo <b>no la finge</b>: Bruto es una bocatería y no
+		una hamburguesería porque no hay hamburguesa en el banco, Mesa 12 manda los postres al
+		camarero, y «La del Encargado» no lleva foto porque aún no existe.</p>
+	</div>
+</div>
+
+<footer>
+	Prototipos autónomos, sin build. Las imágenes se sirven desde
+	<code>carta.adiantai.es/media</code> (mismo banco que producción).
+	Referencias y diagnóstico: <a href="../references/cartas-2026/TABLERO.html">tablero de referencias</a>.
+	Canon de diseño: <code>DESIGN-ADIANTA.md</code>.
+</footer>
+
+</div>
+</body>
+</html>

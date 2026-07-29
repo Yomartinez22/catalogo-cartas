@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0c">
+<title>Anduriña · Menú degustación</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 04 — GALERÍA · arquetipo: alta cocina, menú degustación
+	   Ley: UN PASE = UNA PANTALLA, con scroll-snap. Cero acento de marca: el color
+	   lo pone el plato. El precio del menú aparece una sola vez, al final.
+	   Es lo contrario de una rejilla: aquí no se compara, se recorre.
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): galeria: cinematografico, un solo plano que se abre despacio */
+		--rev-dur:1400ms;
+		--rev-desp:0px;
+		--rev-escala:1.08;
+		--rev-escalon:0ms;
+		--rev-satura:.55;
+		--fondo: #0b0b0c;
+		--tinta: #ededf0;
+		--tinta-media: rgba(237, 237, 240, 0.62);
+		--tinta-baja: rgba(237, 237, 240, 0.34);
+		--filete: rgba(237, 237, 240, 0.16);
+
+		--serif: 'Didot', 'Bodoni MT', 'Playfair Display', Georgia, serif;
+		--ui: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		--ancho: 480px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--fondo);
+		color: var(--tinta);
+		font-family: var(--ui);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta {
+		max-width: var(--ancho);
+		margin: 0 auto;
+		height: 100svh;
+		overflow-y: auto;
+		scroll-snap-type: y mandatory;
+		scrollbar-width: none;
+	}
+	.carta::-webkit-scrollbar { display: none; }
+
+	.pantalla {
+		position: relative;
+		height: 100svh;
+		scroll-snap-align: start;
+		scroll-snap-stop: always;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		padding: 0 26px 52px;
+		isolation: isolate;
+	}
+
+	/* ---------- portada ---------- */
+	.portada { justify-content: center; text-align: center; }
+	.portada h1 {
+		font-family: var(--serif);
+		font-size: clamp(3rem, 2.2rem + 6vw, 4.4rem);
+		font-weight: 400;
+		letter-spacing: 0.04em;
+		line-height: 1;
+		margin: 0 0 22px;
+	}
+	.portada .sub {
+		font-size: 0.72rem;
+		letter-spacing: 0.4em;
+		text-transform: uppercase;
+		color: var(--tinta-baja);
+		margin: 0 0 46px;
+	}
+	.portada .cuenta {
+		font-family: var(--serif);
+		font-size: 1rem;
+		letter-spacing: 0.16em;
+		color: var(--tinta-media);
+		margin: 0;
+	}
+	.pista {
+		position: absolute;
+		left: 50%;
+		bottom: 34px;
+		transform: translateX(-50%);
+		font-size: 0.64rem;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		color: var(--tinta-baja);
+		animation: respira 2.6s ease-in-out infinite;
+	}
+	@keyframes respira { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+	/* ---------- un pase ---------- */
+	.pase img,
+	.pase video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: -2;
+	}
+	.pase::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: linear-gradient(to top, rgba(11, 11, 12, 0.96) 6%, rgba(11, 11, 12, 0.7) 30%, rgba(11, 11, 12, 0.05) 62%);
+	}
+	.pase .num {
+		font-family: var(--serif);
+		font-size: 0.86rem;
+		letter-spacing: 0.34em;
+		color: var(--tinta-baja);
+		margin: 0 0 14px;
+	}
+	.pase h2 {
+		font-family: var(--serif);
+		font-size: clamp(1.9rem, 1.5rem + 2.6vw, 2.5rem);
+		font-weight: 400;
+		line-height: 1.08;
+		letter-spacing: -0.005em;
+		margin: 0 0 12px;
+		text-wrap: balance;
+	}
+	.pase .desc {
+		font-size: 0.94rem;
+		line-height: 1.55;
+		color: var(--tinta-media);
+		margin: 0 0 20px;
+		max-width: 34ch;
+	}
+
+	/* el detalle se pide, no se impone: cerrado por defecto */
+	.pase details {
+		border-top: 1px solid var(--filete);
+		padding-top: 14px;
+	}
+	.pase summary {
+		list-style: none;
+		cursor: pointer;
+		font-size: 0.7rem;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--tinta-baja);
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.pase summary::-webkit-details-marker { display: none; }
+	.pase summary::after {
+		content: '+';
+		margin-left: auto;
+		font-size: 1rem;
+		line-height: 1;
+	}
+	.pase details[open] summary::after { content: '−'; }
+	.pase details p {
+		margin: 12px 0 0;
+		font-size: 0.86rem;
+		line-height: 1.6;
+		color: var(--tinta-media);
+	}
+	.pase details p b { color: var(--tinta); font-weight: 500; }
+
+	/* ---------- cierre: aquí, y sólo aquí, aparece el precio ---------- */
+	.cierre {
+		justify-content: center;
+		text-align: center;
+		border-top: 1px solid var(--filete);
+	}
+	.cierre .eyebrow {
+		font-size: 0.68rem;
+		letter-spacing: 0.34em;
+		text-transform: uppercase;
+		color: var(--tinta-baja);
+		margin: 0 0 18px;
+	}
+	.cierre .importe {
+		font-family: var(--serif);
+		font-size: clamp(3rem, 2.4rem + 5vw, 4rem);
+		line-height: 1;
+		margin: 0 0 14px;
+	}
+	.cierre .letra-pequena {
+		font-size: 0.84rem;
+		color: var(--tinta-media);
+		margin: 0 0 40px;
+		line-height: 1.6;
+	}
+	.cierre a {
+		display: inline-block;
+		padding: 15px 40px;
+		border: 1px solid var(--tinta);
+		color: var(--tinta);
+		text-decoration: none;
+		font-size: 0.72rem;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		transition: background 200ms ease, color 200ms ease;
+	}
+	.cierre a:hover, .cierre a:focus-visible { background: var(--tinta); color: var(--fondo); }
+	.cierre .direccion {
+		margin: 40px 0 0;
+		font-size: 0.78rem;
+		color: var(--tinta-baja);
+		line-height: 1.7;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		* { animation: none !important; transition: none !important; }
+		.carta { scroll-snap-type: none; }
+	}
+	.puntos { position: fixed; right: 12px; top: 50%; transform: translateY(-50%); z-index: 20; display: flex; flex-direction: column; gap: 10px; }
+	.puntos a { width: 5px; height: 5px; border-radius: 3px; background: rgba(237, 237, 240, 0.3); transition: height 260ms var(--rev-curva, ease), background 260ms ease; }
+	.puntos a.activo { height: 20px; background: var(--tinta); }
+	@media (prefers-reduced-motion: reduce) { .puntos a { transition: none; } }
+	/* FIRMA (Alchemist): el scroll es la camara; el texto entra como titulos de cine */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .pase[data-entra]:not(.visto) :is(.num, h2, .desc, details) { opacity: 0; transform: translateY(18px); }
+		.pase[data-entra] :is(.num, h2, .desc, details) { transition: opacity 700ms var(--rev-curva, ease), transform 700ms var(--rev-curva, ease); }
+		.pase.visto h2 { transition-delay: 90ms; }
+		.pase.visto .desc { transition-delay: 190ms; }
+		.pase.visto details { transition-delay: 280ms; }
+		@supports (animation-timeline: view()) {
+			.pase img.rev { animation: camara linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+			@keyframes camara { from { transform: scale(1.14); } to { transform: scale(1); } }
+		}
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<section class="pantalla portada">
+		<h1>Anduriña</h1>
+		<p class="sub">Vigo</p>
+		<p class="cuenta">Menú de julio · nueve pases</p>
+		<p class="pista">Deslice</p>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p1">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/burrata-360.webp" alt="" style="--tono:#593c1e">
+		<p class="num">I</p>
+		<h2>Tomate de la casa, tres texturas</h2>
+		<p class="desc">Corazón de buey de Barbanza en agua de su propio jugo, helado de albahaca
+		y piel deshidratada.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> lácteos.<br><b>Huerta:</b> Rianxo, a 21 km.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p2">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/ceviche-360.webp" alt="" style="--tono:#7c6950">
+		<p class="num">II</p>
+		<h2>Lubina curada en algas</h2>
+		<p class="desc">Curada doce horas en kombu de la ría, leche de tigre de percebe y aceite
+		de cilantro.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> pescado, moluscos, apio.<br><b>Lonja:</b> Bueu, subasta de la mañana.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p3">
+		<img class="rev" src="https://carta.adiantai.es/media/stock/huevo-baja-temperatura-560.webp" alt="" style="--tono:#52483a">
+		<p class="num">III</p>
+		<h2>Huevo de corral a 63 grados</h2>
+		<p class="desc">Sobre parmentier ahumada al sarmiento, con papada ibérica curada en casa
+		y polvo de ceps.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> huevo, lácteos, sulfitos.<br><b>Granja:</b> Ponteareas, gallinas camperas.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p4">
+		<video class="rev" data-video muted loop playsinline preload="metadata" poster="https://carta.adiantai.es/media/raza/platos/arroz-carabinero-560.webp" style="--tono:#91643b" aria-label="Arroz de carabinero, en movimiento"><source src="_media/arroz-hero.mp4" type="video/mp4"></video>
+		<p class="num">IV</p>
+		<h2>Arroz de carabinero</h2>
+		<p class="desc">Bomba del Delta en fondo de sus cabezas durante ocho horas, carabinero de
+		Huelva y curado de parmesano de treinta meses.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> crustáceos, lácteos.<br><b>Nota:</b> el pase se termina en sala.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p5">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/lubina-560.webp" alt="" style="--tono:#7c6c4d">
+		<p class="num">V</p>
+		<h2>Rodaballo a la brasa, ajo blanco</h2>
+		<p class="desc">Pieza salvaje de dos kilos, hecha a la brasa sobre su espina. Ajo blanco
+		de almendra de Mallorca y uva moscatel.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> pescado, frutos secos, sulfitos.<br><b>Lonja:</b> Ribeira.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p6">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/solomillo-560.webp" alt="" style="--tono:#7c4727">
+		<p class="num">VI</p>
+		<h2>Vaca rubia madurada, remolacha</h2>
+		<p class="desc">Lomo alto de rubia gallega con sesenta días de maduración, remolacha
+		asada en sal y jugo de sus propios huesos.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> sulfitos.<br><b>Ganadería:</b> Melide, animales de ocho a diez años.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p7">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/maracaya-360.webp" alt="" style="--tono:#b38470">
+		<p class="num">VII</p>
+		<h2>Granizado de maracuyá y albariño</h2>
+		<p class="desc">Se sirve en copa helada, para limpiar la boca antes del dulce. Maracuyá,
+		hierbaluisa y albariño de la casa.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> sulfitos.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p8">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/belle-epoque-360.webp" alt="" style="--tono:#3f251b">
+		<p class="num">VIII</p>
+		<h2>Coctel de sobremesa</h2>
+		<p class="desc">Lo monta el jefe de sala delante de usted: fresa de temporada, cava brut
+		nature y un golpe de bíter.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> sulfitos.<br><b>Sin alcohol:</b> hay versión, dígalo al pedir.</p>
+		</details>
+	</section>
+
+	<section class="pantalla pase" data-entra id="p9">
+		<img class="rev" src="https://carta.adiantai.es/media/raza/platos/green-mamba-360.webp" alt="" style="--tono:#8e7d63">
+		<p class="num">IX</p>
+		<h2>Digestivo de hierbas</h2>
+		<p class="desc">Maceración de hierbas de nuestra huerta sobre hielo. Cierra el menú y se
+		sirve con los petit fours de la casa.</p>
+		<details>
+			<summary>Alérgenos y procedencia</summary>
+			<p><b>Contiene:</b> los petit fours llevan lácteos, frutos secos y gluten.</p>
+		</details>
+	</section>
+
+	<section class="pantalla cierre">
+		<p class="eyebrow">Menú de julio</p>
+		<p class="importe">120 €</p>
+		<p class="letra-pequena">Nueve pases · IVA incluido<br>
+		Maridaje de siete copas, 65 €</p>
+	</section>
+
+</main>
+<nav class="puntos" data-nav data-scroll=".carta" aria-label="Pases del menú">
+		<a href="#p1" aria-label="Pase 1"></a>
+		<a href="#p2" aria-label="Pase 2"></a>
+		<a href="#p3" aria-label="Pase 3"></a>
+		<a href="#p4" aria-label="Pase 4"></a>
+		<a href="#p5" aria-label="Pase 5"></a>
+		<a href="#p6" aria-label="Pase 6"></a>
+		<a href="#p7" aria-label="Pase 7"></a>
+		<a href="#p8" aria-label="Pase 8"></a>
+		<a href="#p9" aria-label="Pase 9"></a>
+</nav>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+<script src="_video.js" defer></script>
+</body>
+</html>

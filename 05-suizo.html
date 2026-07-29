@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Mesa 12 · Cocina de mercado</title>
+<link rel="stylesheet" href="_presentacion.css">
+<link rel="stylesheet" href="_consulta.css">
+<style>
+	/* ==========================================================================
+	   REGISTRO 05 — SUIZO · arquetipo: bistró moderno, cocina de autor urbana
+	   Ley: retícula estricta, precios alineados con puntos guía, foto DENTRO de la retícula.
+	   El suizo no prohíbe la fotografía, prohíbe el desorden: por eso la foto ocupa una
+	   columna fija y todas miden igual. La jerarquía la sigue cargando la tipografía.
+	   (Nació sin foto como "el que se entrega el mismo día"; ese argumento MURIÓ el
+	   2026-07-28, cuando la foto pasó a ser parte del servicio.)
+	   ========================================================================== */
+	:root {
+
+		/* revelado de foto (capa _presentacion): suizo: nitido y corto -- la reticula no dramatiza */
+		--rev-dur:420ms;
+		--rev-desp:8px;
+		--rev-escala:1;
+		--rev-escalon:40ms;
+		--rev-satura:1;
+		--blanco: #ffffff;
+		--tinta: #111111;
+		--gris: #6b6b6b;
+		--gris-claro: #e4e4e4;
+		--rojo: #e63312;
+
+		--ui: 'Helvetica Neue', Inter, -apple-system, 'Segoe UI', Arial, sans-serif;
+		--ancho: 480px;
+		--gutter: 24px;
+	}
+
+	* { box-sizing: border-box; }
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		margin: 0;
+		background: var(--blanco);
+		color: var(--tinta);
+		font-family: var(--ui);
+		font-size: 15px;
+		line-height: 1.5;
+		letter-spacing: -0.011em;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.carta { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--gutter) 80px; }
+
+	/* ---------- cabecera: la retícula se ve ---------- */
+	.cabecera { padding: 40px 0 0; }
+	.cabecera .fila {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 12px;
+		padding: 9px 0;
+		border-top: 1px solid var(--tinta);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.cabecera .fila:last-of-type { border-bottom: 1px solid var(--tinta); }
+	.cabecera .fila .gris { color: var(--gris); }
+
+	.cabecera h1 {
+		font-size: clamp(2.8rem, 2rem + 6vw, 4rem);
+		font-weight: 700;
+		line-height: 0.94;
+		letter-spacing: -0.045em;
+		margin: 40px 0 12px;
+	}
+	.cabecera .claim {
+		font-size: 1.05rem;
+		line-height: 1.35;
+		letter-spacing: -0.02em;
+		max-width: 22ch;
+		margin: 0 0 40px;
+	}
+	.cabecera .claim em { font-style: normal; color: var(--rojo); }
+
+	/* ---------- secciones numeradas ---------- */
+	.seccion { margin-top: 46px; }
+	.seccion > header {
+		display: grid;
+		grid-template-columns: 34px 1fr auto;
+		align-items: baseline;
+		gap: 10px;
+		padding-bottom: 10px;
+		border-bottom: 2px solid var(--tinta);
+		margin-bottom: 2px;
+	}
+	.seccion > header .idx {
+		font-size: 0.68rem;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+		color: var(--rojo);
+	}
+	.seccion > header h2 {
+		font-size: 0.84rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		margin: 0;
+	}
+	.seccion > header .cuenta {
+		font-size: 0.68rem;
+		color: var(--gris);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* ---------- la línea de plato: nombre · puntos guía · precio ---------- */
+	/* La foto entra en la RETÍCULA, no encima de ella (decisión Yago 2026-07-28: la foto
+	   es parte del servicio). El suizo no prohíbe fotografía: prohíbe el desorden. Por eso
+	   ocupa una columna fija y todas miden exactamente lo mismo. */
+	.plato {
+		display: grid;
+		grid-template-columns: 34px 1fr 76px;
+		gap: 10px;
+		padding: 15px 0;
+		border-bottom: 1px solid var(--gris-claro);
+		align-items: start;
+	}
+	.plato .foto {
+		width: 76px;
+		height: 76px;
+		object-fit: cover;
+		display: block;
+		grid-column: 3;
+		grid-row: 1;
+	}
+	.plato .n {
+		font-size: 0.68rem;
+		color: var(--gris);
+		font-variant-numeric: tabular-nums;
+		padding-top: 3px;
+	}
+	.plato .cuerpo { min-width: 0; }
+	.plato .linea {
+		display: flex;
+		align-items: baseline;
+		gap: 8px;
+	}
+	.plato .nombre { font-weight: 600; letter-spacing: -0.015em; }
+	.plato .puntos {
+		flex: 1;
+		border-bottom: 1px dotted #bdbdbd;
+		transform: translateY(-4px);
+		min-width: 14px;
+	}
+	.plato .precio { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+	.plato .desc {
+		margin: 3px 0 0;
+		font-size: 0.86rem;
+		color: var(--gris);
+		line-height: 1.45;
+	}
+	.plato .etiquetas {
+		display: flex;
+		gap: 6px;
+		margin-top: 7px;
+		flex-wrap: wrap;
+	}
+	.plato .etiquetas span {
+		font-size: 0.6rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--gris);
+		border: 1px solid var(--gris-claro);
+		padding: 2px 6px;
+	}
+	.plato .etiquetas span.destacado { color: var(--rojo); border-color: var(--rojo); }
+
+	/* ---------- bloque de menú del día: el único relleno de color ---------- */
+	.menu-dia {
+		margin-top: 48px;
+		background: var(--tinta);
+		color: var(--blanco);
+		padding: 26px var(--gutter);
+		margin-left: calc(var(--gutter) * -1);
+		margin-right: calc(var(--gutter) * -1);
+	}
+	.menu-dia h2 {
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		margin: 0 0 18px;
+		color: #fff;
+	}
+	.menu-dia .paso {
+		display: grid;
+		grid-template-columns: 68px 1fr;
+		gap: 12px;
+		padding: 9px 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
+		font-size: 0.88rem;
+	}
+	.menu-dia .paso b {
+		font-size: 0.64rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.55);
+		font-weight: 700;
+		padding-top: 3px;
+	}
+	.menu-dia .total {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-top: 18px;
+		padding-top: 14px;
+		border-top: 2px solid #fff;
+		font-weight: 700;
+	}
+	.menu-dia .total .importe { font-size: 1.5rem; letter-spacing: -0.03em; }
+
+	/* ---------- cierre ---------- */
+	.cierre {
+		margin-top: 52px;
+		padding-top: 18px;
+		border-top: 2px solid var(--tinta);
+	}
+	.cierre .fila {
+		display: grid;
+		grid-template-columns: 90px 1fr;
+		gap: 12px;
+		padding: 8px 0;
+		border-bottom: 1px solid var(--gris-claro);
+		font-size: 0.84rem;
+	}
+	.cierre .fila b {
+		font-size: 0.64rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--gris);
+		font-weight: 700;
+		padding-top: 3px;
+	}
+	.cierre a {
+		display: block;
+		margin-top: 26px;
+		padding: 16px;
+		background: var(--rojo);
+		color: #fff;
+		text-align: center;
+		text-decoration: none;
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+	.nav-carta { background: var(--blanco); border-bottom: 2px solid var(--tinta); }
+	.nav-carta a { color: var(--gris); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+	.nav-carta a.activo { color: var(--tinta); box-shadow: inset 0 -2px 0 var(--rojo); }
+	/* FIRMA (contencion Noma): los puntos guia se dibujan hacia el precio */
+	@media (prefers-reduced-motion: no-preference) {
+		html.js-rev .plato[data-entra]:not(.visto) .puntos { transform: translateY(-4px) scaleX(0); }
+		.plato[data-entra] .puntos { transform-origin: left; transition: transform 620ms var(--rev-curva, ease) 140ms; }
+	}
+</style>
+</head>
+<body>
+<main class="carta">
+
+	<header class="cabecera">
+		<div class="fila"><span>Mesa 12</span><span class="gris">Coruña</span></div>
+		<div class="fila"><span>Carta de verano</span><span class="gris">28.07.2026</span></div>
+
+		<h1>Mesa 12</h1>
+		<p class="claim">Cocina de mercado. La carta la escribe <em>el mercado</em>, nosotros
+		sólo la copiamos.</p>
+	</header>
+
+	<nav class="nav-carta" data-nav aria-label="Ir a">
+		<a href="#s1">01 Entrantes</a>
+		<a href="#s2">02 Principales</a>
+		<a href="#menu">Mediodía 19,50</a>
+	</nav>
+
+	<section class="seccion" id="s1">
+		<header>
+			<span class="idx">01</span>
+			<h2>Entrantes</h2>
+			<span class="cuenta">6</span>
+		</header>
+
+		<article class="plato" data-entra>
+			<span class="n">1.1</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Steak tartar de vaca madurada</span><span class="puntos"></span><span class="precio">19,00</span></p>
+				<p class="desc">Cortado a cuchillo, alcaparra, mostaza antigua y yema curada. Con pan de masa madre.</p>
+				<div class="etiquetas"><span class="destacado">Lo más pedido</span><span>Huevo</span><span>Gluten</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/steak-tartar-360.webp" alt="Steak tartar" style="--tono:#3f3c35">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">1.2</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Carpaccio de gambón</span><span class="puntos"></span><span class="precio">17,00</span></p>
+				<p class="desc">Abierto en crudo, aliñado con lima, aceite de Jaén y flor de sal.</p>
+				<div class="etiquetas"><span>Crustáceos</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/carpaccio-gambon-360.webp" alt="Carpaccio de gambón" style="--tono:#a68d60">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">1.3</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Huevo de corral a baja temperatura</span><span class="puntos"></span><span class="precio">14,00</span></p>
+				<p class="desc">A 63 grados, sobre parmentier ahumada, con papada ibérica y polvo de ceps.</p>
+				<div class="etiquetas"><span>Huevo</span><span>Lácteos</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/huevo-baja-temperatura-360.webp" alt="Huevo a baja temperatura" style="--tono:#52483a">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">1.4</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Tosta de tartar de atún</span><span class="puntos"></span><span class="precio">16,00</span></p>
+				<p class="desc">Lomo de atún rojo sobre pan tostado, aguacate y sésamo negro.</p>
+				<div class="etiquetas"><span>Pescado</span><span>Gluten</span><span>Sésamo</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/tosta-tartar-atun-360.webp" alt="Tosta de tartar de atún" style="--tono:#af955a">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">1.5</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Ensalada de temporada</span><span class="puntos"></span><span class="precio">12,00</span></p>
+				<p class="desc">Lo que haya en la huerta esa semana, con vinagreta de mostaza y hierbas.</p>
+				<div class="etiquetas"><span class="destacado">Vegano</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/ensalada-temporada-360.webp" alt="Ensalada de temporada" style="--tono:#a49266">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">1.6</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Tabla de quesos</span><span class="puntos"></span><span class="precio">16,00</span></p>
+				<p class="desc">Cinco quesos con membrillo de la casa, nueces y pan de pasas.</p>
+				<div class="etiquetas"><span>Lácteos</span><span>Frutos secos</span><span>Gluten</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/tabla-quesos-360.webp" alt="Tabla de quesos" style="--tono:#a59480">
+		</article>
+	</section>
+
+	<section class="seccion" id="s2">
+		<header>
+			<span class="idx">02</span>
+			<h2>Principales</h2>
+			<span class="cuenta">5</span>
+		</header>
+
+		<article class="plato" data-entra>
+			<span class="n">2.1</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Pulpo a la brasa</span><span class="puntos"></span><span class="precio">22,00</span></p>
+				<p class="desc">Cocido en su punto y terminado en parrilla. Cachelo y pimentón de la Vera.</p>
+				<div class="etiquetas"><span>Moluscos</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/stock/pulpo-360.webp" alt="Pulpo a la brasa" style="--tono:#bbb198">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">2.2</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Lubina salvaje a la espalda</span><span class="puntos"></span><span class="precio">26,00</span></p>
+				<p class="desc">Pieza de lonja abierta a la brasa, con refrito de ajo y guindilla.</p>
+				<div class="etiquetas"><span>Pescado</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/lubina-360.webp" alt="Lubina a la espalda" style="--tono:#7c6c4d">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">2.3</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Entrecot de rubia gallega</span><span class="puntos"></span><span class="precio">29,00</span></p>
+				<p class="desc">400 g con hueso, 30 días de maduración. Patata revolcona y pimiento asado.</p>
+				<div class="etiquetas"><span class="destacado">Lo más pedido</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/entrecot-360.webp" alt="Entrecot de rubia gallega" style="--tono:#683927">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">2.4</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Solomillo con foie</span><span class="puntos"></span><span class="precio">27,00</span></p>
+				<p class="desc">Solomillo de ternera, foie fresco a la plancha y reducción de Pedro Ximénez.</p>
+				<div class="etiquetas"><span>Sulfitos</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/solomillo-360.webp" alt="Solomillo con foie" style="--tono:#7c4727">
+		</article>
+
+		<article class="plato" data-entra>
+			<span class="n">2.5</span>
+			<div class="cuerpo">
+				<p class="linea"><span class="nombre">Arroz de carabinero</span><span class="puntos"></span><span class="precio">27,00</span></p>
+				<p class="desc">Mínimo dos personas, precio por persona. 40 minutos de espera.</p>
+				<div class="etiquetas"><span class="destacado">Para compartir</span><span>Crustáceos</span><span>Lácteos</span></div>
+			</div>
+			<img class="foto rev" data-amplia src="https://carta.adiantai.es/media/raza/platos/arroz-carabinero-360.webp" alt="Arroz de carabinero" style="--tono:#91643b">
+		</article>
+	</section>
+
+
+	<section class="menu-dia" id="menu">
+		<h2>Menú del mediodía · de martes a viernes</h2>
+		<div class="paso"><b>Primero</b><span>A elegir entre tres</span></div>
+		<div class="paso"><b>Segundo</b><span>A elegir entre tres</span></div>
+		<div class="paso"><b>Postre</b><span>Los del día, se los canta el camarero</span></div>
+		<div class="paso"><b>Incluye</b><span>Pan, agua y una copa de vino de la casa</span></div>
+		<div class="total"><span>Por persona</span><span class="importe">19,50 €</span></div>
+	</section>
+
+	<footer class="cierre">
+		<div class="fila"><b>Alérgenos</b><span>Informe a su camarero de cualquier intolerancia</span></div>
+	</footer>
+
+</main>
+<script src="_presentacion.js" defer></script>
+<script src="_consulta.js" defer></script>
+</body>
+</html>

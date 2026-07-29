@@ -1,0 +1,98 @@
+/* ==========================================================================
+   CAPA DE PRESENTACIÓN — compartida por los 10 registros
+   ==========================================================================
+   Decisión Yago 2026-07-28: "puedes tener muy buenas fotos que si no las
+   presentas de una manera premium no sirve de nada".
+
+   Lo que separa una carta premium de una plantilla NO es tener más fotos. Es
+   esto: de qué color viene la imagen antes de existir, cómo entra, y qué hace
+   cuando la tocas. Tres detalles invisibles hasta que faltan.
+
+   1. NUNCA un destello blanco. La propia <img> lleva de fondo --tono, el color
+      MEDIO de esa foto concreta, calculado del fichero real. Mientras los
+      píxeles viajan, el hueco ya tiene el color del plato que va a llegar.
+   2. Entra al entrar en pantalla, no al cargar: sube y se asienta desde una
+      escala ligeramente mayor, en cascada con sus hermanas.
+   3. Al pulsar, la foto responde. Un elemento que parece tocable y no se hunde
+      lo lee el dedo como roto.
+
+   Se aplica SOBRE la <img>, sin envoltorios: así no rompe las fotos de fondo
+   en position:absolute (portadas, GALERÍA) ni los hijos de un grid.
+   Cada registro le pone su carácter con sus propias variables.
+   ========================================================================== */
+
+:root {
+	--rev-dur: 720ms;
+	--rev-desp: 14px;          /* cuánto sube al entrar */
+	--rev-escala: 1.04;        /* de cuánto se asienta */
+	--rev-curva: cubic-bezier(0.16, 1, 0.3, 1);
+	--rev-escalon: 70ms;       /* retardo entre hermanas */
+	--rev-satura: 0.72;        /* de cuánta desaturación "revela" */
+}
+
+:is(img, video).rev {
+	/* el hueco ya tiene el color de la foto: cero destello, cero salto */
+	background-color: var(--tono, #1a1a1a);
+	background-size: cover;
+	opacity: 0;
+	transform: translateY(var(--rev-desp)) scale(var(--rev-escala));
+	transition:
+		opacity var(--rev-dur) var(--rev-curva),
+		transform var(--rev-dur) var(--rev-curva),
+		filter var(--rev-dur) var(--rev-curva);
+	will-change: opacity, transform;
+	/* Se COMPONE con el tratamiento del registro (--foto-filtro): el sepia de PAPEL,
+	   el brillo bajado de NEON o el contraste de MERCADO no se pueden perder por culpa
+	   del revelado. Escribir 'filter' a secas aqui los borraba a los tres. */
+	filter: var(--foto-filtro, ) saturate(var(--rev-satura));
+}
+
+:is(img, video).rev.visto {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	filter: var(--foto-filtro, ) saturate(1);
+}
+
+/* Al acabar, soltar will-change: si no, la capa se queda promovida a GPU para
+   siempre y en un móvil modesto eso se paga en memoria. */
+:is(img, video).rev.asentado { will-change: auto; }
+
+/* Cascada: las hermanas no entran a la vez, entran en escalera. */
+:is(img, video).rev[data-i='1'] { transition-delay: calc(var(--rev-escalon) * 1); }
+:is(img, video).rev[data-i='2'] { transition-delay: calc(var(--rev-escalon) * 2); }
+:is(img, video).rev[data-i='3'] { transition-delay: calc(var(--rev-escalon) * 3); }
+:is(img, video).rev[data-i='4'] { transition-delay: calc(var(--rev-escalon) * 4); }
+
+/* ---------- respuesta al dedo ----------
+   Sólo en lo que ES tocable: hundir algo que no lo es es una promesa falsa. */
+button .mini, button .foto, a .mini, .pulsable .mini {
+	transition: transform 260ms var(--rev-curva);
+}
+button:active .mini,
+button:active .foto,
+a:active .mini,
+.pulsable:active .mini {
+	transform: scale(0.965);
+	transition: transform 120ms ease-out;
+}
+
+/* ---------- la animación es un adorno; ver la comida, no ----------
+   Sin JS la clase js-rev no existe y las fotos se quedan visibles. Con motion
+   reducido, se ven sin moverse. En los dos casos la carta funciona. */
+html:not(.js-rev) :is(img, video).rev {
+	opacity: 1;
+	transform: none;
+	filter: var(--foto-filtro, );
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:is(img, video).rev {
+		opacity: 1;
+		transform: none;
+		filter: var(--foto-filtro, );
+		transition: none;
+	}
+	button:active .mini, button:active .foto, a:active .mini, .pulsable:active .mini {
+		transform: none;
+	}
+}

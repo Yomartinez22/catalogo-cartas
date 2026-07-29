@@ -1,0 +1,92 @@
+/* ==========================================================================
+   CAPA DE CONSULTA — compartida por los 10 registros
+   ==========================================================================
+   Decisión Yago 2026-07-28: la carta tiene que ser interactiva y sencilla de
+   consultar, y la gente compra por lo que ve. Tres mecanismos, cero curva de
+   aprendizaje (van con _consulta.js):
+
+   1. Nav de secciones ([data-nav]): saltar a una sección y saber dónde estás.
+      Aquí solo el esqueleto; cada registro la re-tinta en su propio CSS.
+   2. Filtros que funcionan ([data-filtro-grupo] + [data-item]): en BODEGA por
+      uva y zona, en NEÓN por lo que te apetece. Elegir entre 214 cosas no es
+      libertad, es parálisis: filtrar ES vender.
+   3. La lupa (img[data-amplia]): tocas una foto y la ves a pantalla completa,
+      sobre su propio tono. Si compra por lo que ve, que lo vea grande.
+   ========================================================================== */
+
+/* ---------- nav de secciones: esqueleto común ---------- */
+.nav-carta {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	display: flex;
+	gap: 4px;
+	overflow-x: auto;
+	scrollbar-width: none;
+	padding: 10px var(--gutter, 20px);
+}
+.nav-carta::-webkit-scrollbar { display: none; }
+.nav-carta a {
+	flex: 0 0 auto;
+	text-decoration: none;
+	color: inherit;
+	padding: 8px 12px;
+	font-size: 0.78rem;
+	white-space: nowrap;
+}
+
+/* ---------- filtros ---------- */
+[data-item].filtro-oculto { display: none; }
+
+/* ---------- lupa ---------- */
+img[data-amplia] { cursor: zoom-in; }
+
+.lupa {
+	position: fixed;
+	inset: 0;
+	z-index: 80;
+	background: rgba(8, 8, 10, 0.88);
+	backdrop-filter: blur(6px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 26px;
+	cursor: zoom-out;
+}
+.lupa figure { margin: 0; max-width: min(560px, 94vw); }
+.lupa img {
+	width: 100%;
+	max-height: 74vh;
+	object-fit: contain;
+	display: block;
+	background: var(--tono, #111);
+}
+.lupa figcaption {
+	color: rgba(255, 255, 255, 0.82);
+	font: 400 0.88rem/1.5 -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+	text-align: center;
+	margin-top: 14px;
+}
+.lupa-x {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	width: 44px;
+	height: 44px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	background: rgba(8, 8, 10, 0.6);
+	color: #fff;
+	font-size: 1.3rem;
+	line-height: 1;
+	cursor: pointer;
+}
+.lupa-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+html.lupa-abierta { overflow: hidden; }
+
+@media (prefers-reduced-motion: no-preference) {
+	.lupa { animation: lupa-velo 200ms ease; }
+	.lupa img { animation: lupa-foto 280ms cubic-bezier(0.16, 1, 0.3, 1); }
+	@keyframes lupa-velo { from { opacity: 0; } }
+	@keyframes lupa-foto { from { transform: scale(0.955); } }
+}
