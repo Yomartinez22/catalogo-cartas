@@ -90,3 +90,150 @@ html.lupa-abierta { overflow: hidden; }
 	@keyframes lupa-velo { from { opacity: 0; } }
 	@keyframes lupa-foto { from { transform: scale(0.955); } }
 }
+
+/* ---------- la ficha de plato (2026-08-07) ----------
+   Tocar un plato lo amplía a ficha completa — el calco de la ficha de la carta
+   de producción (app-carta PlatoDetalle): velo con blur, lámina que entra con
+   el giro, foto que se asienta, contenido en cascada y salida en fundido.
+   Camaleón: la ficha NO trae paleta ni tipografía propias — _consulta.js le
+   inyecta los colores computados del body y las fuentes reales del plato
+   tocado (--f-fondo/--f-tinta/--f-acento + font-family inline), así que en
+   PAPEL sale clara y serif y en NEÓN oscura, sin una línea por registro.
+   Lección heredada de producción (iOS/WebKit): el movimiento vive SIEMPRE en
+   .f-lamina, nunca en el contenedor de nivel superior. */
+[data-ficha-lista] { cursor: pointer; }
+
+.ficha-velo {
+	position: fixed;
+	inset: 0;
+	z-index: 90;
+	background: rgba(8, 8, 10, 0.55);
+	-webkit-backdrop-filter: blur(3px);
+	backdrop-filter: blur(3px);
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+}
+
+.f-lamina {
+	position: relative;
+	width: 100%;
+	max-width: 480px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: var(--f-fondo, #16161b);
+	color: var(--f-tinta, #f4f4f6);
+}
+
+.f-x {
+	position: absolute;
+	top: calc(12px + env(safe-area-inset-top, 0px));
+	right: 12px;
+	z-index: 3;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	background: rgba(8, 8, 10, 0.45);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	color: #fff;
+	font-size: 1.25rem;
+	line-height: 1;
+	cursor: pointer;
+}
+.f-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.f-media {
+	position: relative;
+	flex: 0 0 auto;
+	height: 44%;
+	min-height: 180px;
+	overflow: hidden;
+	background: var(--tono, #111);
+}
+.f-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.f-scrim {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 40%, transparent 68%, var(--f-fondo, #16161b));
+	pointer-events: none;
+}
+
+.f-cuerpo {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	/* el gesto muere aquí: sin esto el scroll se encadena a la carta de detrás */
+	overscroll-behavior: contain;
+	padding: 18px 22px calc(28px + env(safe-area-inset-bottom, 0px));
+}
+.f-lamina.sin-foto .f-cuerpo { padding-top: 68px; }
+
+.f-eyebrow {
+	margin: 0 0 8px;
+	font-size: 0.68rem;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--f-acento, inherit);
+}
+.f-cab {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 14px;
+}
+.f-nombre { margin: 0; font-size: 1.7rem; line-height: 1.08; font-weight: 600; letter-spacing: 0.01em; }
+.f-precio { font-size: 1.4rem; font-weight: 600; white-space: nowrap; color: var(--f-acento, inherit); }
+.f-sub { margin: 6px 0 0; font-size: 0.86rem; color: color-mix(in srgb, currentColor 62%, transparent); }
+.f-desc { margin: 14px 0 0; font-size: 1.03rem; line-height: 1.6; color: color-mix(in srgb, currentColor 80%, transparent); }
+.f-marida {
+	margin: 16px 0 0;
+	padding-top: 12px;
+	border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+	font-size: 0.95rem;
+	line-height: 1.5;
+}
+.f-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; }
+.f-chips span {
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	padding: 3px 8px;
+	border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+}
+
+html.ficha-abierta { overflow: hidden; }
+
+@media (prefers-reduced-motion: no-preference) {
+	.ficha-velo { animation: f-velo-in 320ms ease both; }
+	/* la entrada: el giro de la ficha de producción. La opacidad sube en el
+	   primer tramo para que la fase espejada del giro no se aprecie. */
+	.f-lamina { animation: ficha-flip 560ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+	.f-media img { animation: f-foto-asienta 900ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+	.f-eyebrow, .f-cab { animation: f-sube 420ms cubic-bezier(0.16, 1, 0.3, 1) 100ms backwards; }
+	.f-sub, .f-desc { animation: f-sube 420ms cubic-bezier(0.16, 1, 0.3, 1) 150ms backwards; }
+	.f-marida { animation: f-sube 420ms cubic-bezier(0.16, 1, 0.3, 1) 175ms backwards; }
+	.f-chips { animation: f-sube 420ms cubic-bezier(0.16, 1, 0.3, 1) 240ms backwards; }
+	/* salida: fundido puro (la X te deja donde estabas — decisión de producción) */
+	.ficha-velo.cerrando { animation: f-velo-out 200ms ease forwards; }
+	.ficha-velo.cerrando .f-lamina { animation: f-fade 160ms ease-out forwards; }
+	.ficha-velo.cerrando .f-media img,
+	.ficha-velo.cerrando .f-eyebrow, .ficha-velo.cerrando .f-cab,
+	.ficha-velo.cerrando .f-sub, .ficha-velo.cerrando .f-desc,
+	.ficha-velo.cerrando .f-marida, .ficha-velo.cerrando .f-chips { animation: none; }
+
+	@keyframes ficha-flip {
+		from { opacity: 0; transform: perspective(1200px) rotateY(-180deg) scale(0.35); }
+		45% { opacity: 1; }
+	}
+	@keyframes f-foto-asienta { from { transform: scale(1.12); } }
+	@keyframes f-sube { from { opacity: 0; transform: translateY(14px); } }
+	@keyframes f-velo-in { from { opacity: 0; } }
+	@keyframes f-velo-out { to { opacity: 0; } }
+	@keyframes f-fade { to { opacity: 0; } }
+}
